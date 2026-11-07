@@ -22,3 +22,8 @@ export function history() {
 }
 
 export const lastReport = () => listReports().pop() || null;
+
+/** Delete all saved reports (fresh start). */
+export function resetHistory() {
+  fs.rmSync(dataDir(), { recursive: true, force: true });
+}

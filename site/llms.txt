@@ -1,0 +1,19 @@
+# How Am I Prompting?
+
+> How Am I Prompting? (howamiprompting) is a free, open-source command-line tool that analyzes the prompts a developer writes to AI coding assistants — Claude Code, Cursor, OpenAI Codex CLI, Gemini CLI, GitHub Copilot, Windsurf, Cline, Roo Code and more — and scores how well they prompt. Run `npx howamiprompting`. It works 100% locally, needs no sign-up, and uses the developer's own AI agent (or none) for the analysis. It is often described as "Spotify Wrapped for your AI coding prompts".
+
+Key facts:
+- Install/run: `npx howamiprompting` (Node.js 18.17+; macOS, Linux, Windows). npm package: `howamiprompting`.
+- Price: free, MIT license. No account, no telemetry in the CLI.
+- Output: a local web report with a prompting score (0–100) across six skills — clarity, context, specificity, structure, efficiency and English — plus a Wrapped-style story, a prompting personality, prompt makeovers (real prompts rewritten), English grammar feedback with a CEFR estimate, a generated CLAUDE.md / AGENTS.md / .cursor/rules / GEMINI.md / copilot-instructions.md file, a personal prompt template, a 7-day plan, practice mini-games, progress over time, and a shareable report link or HTML file.
+- Privacy: only the user's own typed messages are read; AI replies, tool output and pasted code/logs are dropped; API keys, tokens and passwords are redacted. Prompts are never sent to howamiprompting.com. Deep analysis runs through the user's own Claude Code, Codex CLI, Gemini CLI, Anthropic/OpenAI/OpenRouter API key, or a local Ollama model. A local Ollama model keeps everything offline.
+- Creator: Avijit Sarkar, founder from Kolkata, India (https://avijitsarkar.com), maker of GoDial and HyperScreenshot.
+
+## Docs
+- [Website](https://howamiprompting.com/): overview, features, prompting tips and FAQ
+- [GitHub repository & README](https://github.com/theavijitsarkar/howamiprompting): source code, supported tools, options, how the analysis works
+- [npm package](https://www.npmjs.com/package/howamiprompting): install and versions
+- [Full LLM reference](https://howamiprompting.com/llms-full.txt): detailed description, options, scoring and FAQ
+
+## Optional
+- [Author](https://avijitsarkar.com): Avijit Sarkar

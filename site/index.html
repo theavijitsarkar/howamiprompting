@@ -3,18 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How am I prompting? — Spotify Wrapped for your AI coding prompts</title>
-<meta name="description" content="One command scans your Claude Code, Codex, Cursor, Gemini CLI, Copilot and Cline chats locally, scores how you prompt (and your English), rewrites your worst prompts and coaches you to get better. Free, open source, no sign-up.">
-<meta property="og:title" content="How am I prompting? 🤔">
-<meta property="og:description" content="Spotify Wrapped for your AI coding prompts. npx howamiprompting — 100% local, free, open source.">
-<meta property="og:image" content="https://howamiprompting.com/img/share-card.png">
-<meta property="og:url" content="https://howamiprompting.com/">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://howamiprompting.com/img/share-card.png">
+<title>How Am I Prompting? – Analyze Your Claude Code &amp; Cursor Prompts</title>
+<meta name="description" content="Free, open-source CLI that scores how you prompt Claude Code, Cursor, Codex &amp; Copilot. Get prompt makeovers, English feedback and a CLAUDE.md file. 100% local.">
+<meta name="keywords" content="AI prompt analyzer, Claude Code prompts, Cursor prompts, Codex CLI, prompt engineering for developers, CLAUDE.md generator, AGENTS.md, cursor rules, vibe coding, AI coding assistant, prompt score, Claude Code wrapped">
 <meta name="author" content="Avijit Sarkar">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"How am I prompting?","applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Linux, Windows","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Spotify Wrapped for your AI coding prompts. Scores how you prompt Claude Code, Codex, Cursor and more — locally.","url":"https://howamiprompting.com","author":{"@type":"Person","name":"Avijit Sarkar","url":"https://avijitsarkar.com"}}</script>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="theme-color" content="#ffd84d">
 <link rel="canonical" href="https://howamiprompting.com/">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤔</text></svg>">
+<link rel="alternate" type="text/plain" title="LLM summary" href="https://howamiprompting.com/llms.txt">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="How Am I Prompting?">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://howamiprompting.com/">
+<meta property="og:title" content="How Am I Prompting? Spotify Wrapped for your AI coding prompts">
+<meta property="og:description" content="One command scores how you prompt Claude Code, Cursor, Codex &amp; Copilot, rewrites your worst prompts and coaches you. Free, open source, 100% local.">
+<meta property="og:image" content="https://howamiprompting.com/img/share-card.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="How Am I Prompting? score card showing a prompting score out of 100 across six skills">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How Am I Prompting? Spotify Wrapped for your AI coding prompts">
+<meta name="twitter:description" content="npx howamiprompting scores how you prompt Claude Code, Cursor &amp; Codex. Free, open source, 100% local.">
+<meta name="twitter:image" content="https://howamiprompting.com/img/share-card.png">
+<meta name="twitter:image:alt" content="Prompting score card">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" as="image" href="img/report.webp" type="image/webp">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "@id": "https://howamiprompting.com/#app", "name": "How Am I Prompting?", "alternateName": ["howamiprompting", "How am I prompting"], "applicationCategory": "DeveloperApplication", "applicationSubCategory": "AI prompt analyzer", "operatingSystem": "macOS, Linux, Windows", "description": "Free, open-source CLI that analyzes the prompts you write to AI coding assistants (Claude Code, Cursor, Codex, Gemini CLI, GitHub Copilot, Cline) and scores clarity, context, specificity, structure, efficiency and English. Runs locally with npx howamiprompting.", "url": "https://howamiprompting.com/", "downloadUrl": "https://www.npmjs.com/package/howamiprompting", "installUrl": "https://www.npmjs.com/package/howamiprompting", "softwareRequirements": "Node.js 18.17+", "license": "https://opensource.org/licenses/MIT", "isAccessibleForFree": true, "image": "https://howamiprompting.com/img/share-card.png", "screenshot": ["https://howamiprompting.com/img/report.webp", "https://howamiprompting.com/img/makeovers.webp", "https://howamiprompting.com/img/english.webp"], "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "featureList": ["Prompting score on six skills", "Prompt makeovers of your real prompts", "English grammar feedback with CEFR estimate", "CLAUDE.md / AGENTS.md / Cursor rules generator", "Spotify Wrapped-style prompting stats", "Practice mini-games", "Shareable report and score card", "100% local, no sign-up"], "codeRepository": "https://github.com/theavijitsarkar/howamiprompting", "sameAs": ["https://github.com/theavijitsarkar/howamiprompting", "https://www.npmjs.com/package/howamiprompting"], "author": {"@id": "https://howamiprompting.com/#avijit"}, "publisher": {"@id": "https://howamiprompting.com/#avijit"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "@id": "https://howamiprompting.com/#avijit", "name": "Avijit Sarkar", "url": "https://avijitsarkar.com", "jobTitle": "Founder", "homeLocation": {"@type": "Place", "name": "Kolkata, India"}, "sameAs": ["https://avijitsarkar.com", "https://github.com/theavijitsarkar", "https://godial.cc", "https://hyperscreenshot.com"]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "@id": "https://howamiprompting.com/#website", "url": "https://howamiprompting.com/", "name": "How Am I Prompting?", "inLanguage": "en", "publisher": {"@id": "https://howamiprompting.com/#avijit"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "HowTo", "name": "How to analyze and improve your AI coding prompts", "totalTime": "PT5M", "tool": [{"@type": "HowToTool", "name": "Node.js 18.17+"}, {"@type": "HowToTool", "name": "Claude Code, Codex CLI, Gemini CLI, an API key or Ollama (optional)"}], "step": [{"@type": "HowToStep", "name": "Run the command", "text": "Open a terminal and run: npx howamiprompting"}, {"@type": "HowToStep", "name": "Let it scan locally", "text": "It finds your Claude Code, Cursor, Codex, Gemini CLI, Copilot and Cline history and keeps only what you typed, with secrets redacted."}, {"@type": "HowToStep", "name": "Approve the AI analysis", "text": "Confirm, and a sample of your prompts is analysed by the AI agent you already use."}, {"@type": "HowToStep", "name": "Read your report", "text": "Your report opens in the browser with your score, prompt makeovers, English feedback, a CLAUDE.md file and a 7-day plan."}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is How Am I Prompting?", "acceptedAnswer": {"@type": "Answer", "text": "How Am I Prompting? is a free, open-source command-line tool for developers. Run npx howamiprompting and it reads the prompts you have written to AI coding assistants such as Claude Code, Cursor, Codex, Gemini CLI and GitHub Copilot, scores how well you prompt, rewrites your weakest prompts and gives you a personal improvement plan. It's like Spotify Wrapped for your AI coding prompts."}}, {"@type": "Question", "name": "How do I write better prompts for Claude Code, Cursor or Codex?", "acceptedAnswer": {"@type": "Answer", "text": "State one clear goal, describe the current behaviour and the expected behaviour, point to the relevant files, add constraints (what not to touch) and say what done looks like. Give one task at a time or number the steps. When something fails, paste the new error with one line of your own theory instead of writing \"still not working\". Put rules you repeat every session into a CLAUDE.md or AGENTS.md file. How Am I Prompting? checks your real prompts against all of these."}}, {"@type": "Question", "name": "Which AI coding tools are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Claude Code, OpenAI Codex CLI, Cursor (Chat, Composer and Agent), GitHub Copilot Chat in VS Code, Gemini CLI, Windsurf, Antigravity, Trae, Kiro, Cline, Roo Code, Kilo Code, Continue, OpenCode, Aider and SpecStory. Any other tool works by importing an export file with --include."}}, {"@type": "Question", "name": "Is it safe? Does it upload my code or prompts?", "acceptedAnswer": {"@type": "Answer", "text": "Your prompts are never sent to us. The tool reads your chat history locally, keeps only what you typed, removes pasted code and logs, and redacts API keys, tokens and passwords. For the deep analysis it sends a small sample of prompts through the AI agent you already use (your own Claude Code, Codex, Gemini or API key), or a local Ollama model that never leaves your machine. The code is open source on GitHub."}}, {"@type": "Question", "name": "Is How Am I Prompting? free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It is free and MIT-licensed. There is no account, no sign-up and no paid plan. The analysis uses a few calls of your own AI quota, or none at all with a local Ollama model."}}, {"@type": "Question", "name": "Do I need an API key?", "acceptedAnswer": {"@type": "Answer", "text": "No. If you have Claude Code, Codex CLI or Gemini CLI installed and logged in, it uses that. It can also use an ANTHROPIC_API_KEY, OPENAI_API_KEY or OPENROUTER_API_KEY, or a local Ollama model. If you have none of them, the CLI helps you set one up — for example the free Gemini CLI with a Google account."}}, {"@type": "Question", "name": "How is the prompting score calculated?", "acceptedAnswer": {"@type": "Answer", "text": "Your prompts are scored from 0 to 100 on six skills: clarity, context, specificity, structure, efficiency and English. Your own AI agent reads a stratified sample of about 180 prompts in batches, and local metrics (prompt length, one-word replies, frustration loops, context-giving, repeated instructions, punctuation and grammar patterns) are computed on your machine. The overall score is a weighted average of the six skills."}}, {"@type": "Question", "name": "What is a CLAUDE.md or AGENTS.md file and how does this help?", "acceptedAnswer": {"@type": "Answer", "text": "CLAUDE.md (Claude Code), AGENTS.md (Codex and others), GEMINI.md, .cursor/rules and copilot-instructions.md are rules files your AI agent reads at the start of every session. How Am I Prompting? finds instructions you keep repeating, like \"use pnpm\" or \"don't add comments\", and generates a ready-to-paste rules file so you never type them again."}}, {"@type": "Question", "name": "Does it check my English and grammar?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. English is one of the six skills. It shows your real grammar mistakes with corrections and the rule behind each one, estimates your CEFR level (A2 to C2) and only judges your prose, never your code. Practice mode has four timed mini-games built from your own weak spots."}}, {"@type": "Question", "name": "Can I share my report?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Download a share card image for X or LinkedIn, or share your full report as a link or a single HTML file. The report is packed inside the link itself, so nothing is uploaded to a server."}}, {"@type": "Question", "name": "What do I need installed?", "acceptedAnswer": {"@type": "Answer", "text": "Node.js 18.17 or newer. Reading Cursor history needs Node.js 22.5+ or the sqlite3 command, which comes with macOS. It works on macOS, Linux and Windows."}}, {"@type": "Question", "name": "Where is my data stored?", "acceptedAnswer": {"@type": "Answer", "text": "Only on your own computer, in ~/.howamiprompting/, so you can track your score over time. Clear it any time with <code>npx howamiprompting --reset</code>."}}]}</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <!-- Google Analytics (website only — the CLI has no tracking) -->
@@ -26,6 +46,17 @@
 body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--cream); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 body::before { content:''; position: fixed; inset: 0; z-index: -2; background-image: radial-gradient(rgba(22,20,43,.11) 1.4px, transparent 1.4px); background-size: 22px 22px; }
 a { color: inherit; }
+img { max-width: 100%; height: auto; }
+@media (max-width: 560px) {
+  .term { font-size: 16px; gap: 10px; padding: 12px 12px 12px 16px; max-width: 100%; }
+  .logo { font-size: 16px; white-space: nowrap; }
+  nav .btn.small { font-size: 13px; padding: 7px 10px; white-space: nowrap; }
+  .hero { padding-top: 40px; }
+  .hero .tag { font-size: 10px; }
+  .shots .a, .shots .b { display: none; }
+  .shots .c { width: 100%; }
+  .hide-sm { display: none; }
+}
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; }
 nav { position: sticky; top: 0; z-index: 20; background: rgba(255,247,232,.9); backdrop-filter: blur(10px); border-bottom: 3px solid var(--ink); }
 nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 14px; padding-bottom: 14px; }
@@ -76,27 +107,32 @@ summary { cursor: pointer; font-weight: 800; font-size: 18px; } details p { marg
 code { font-family: var(--mono); background: #16142b10; padding: 2px 7px; border-radius: 6px; font-size: .92em; }
 footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(--muted); }
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(200%); background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 14px; font-weight: 700; border: 3px solid var(--yellow); transition: transform .3s; z-index: 50; }
-.toast.on { transform: translateX(-50%); }
+.toast.on { transform: translateX(-50%); opacity: 1; visibility: visible; }
+.toast { opacity: 0; visibility: hidden; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 18px; }
+@media (max-width: 960px) { .grid4 { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 520px) { .grid4 { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<nav><div class="wrap">
-  <a class="logo" href="#"><span class="q">?</span>how am i prompting<em>?</em></a>
-  <div class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#privacy">Privacy</a><a href="#faq">FAQ</a></div>
-  <a class="btn small" href="https://github.com/theavijitsarkar/howamiprompting" data-ev="github_click">⭐ Star on GitHub</a>
+<nav aria-label="Main"><div class="wrap">
+  <a class="logo" href="/" aria-label="How Am I Prompting? home"><span class="q">?</span>how am i prompting<em>?</em></a>
+  <div class="links"><a href="#features">Features</a><a href="#tips">Prompting tips</a><a href="#how">How it works</a><a href="#privacy">Privacy</a><a href="#faq">FAQ</a></div>
+  <a class="btn small" href="https://github.com/theavijitsarkar/howamiprompting" data-ev="github_click">⭐ Star<span class="hide-sm"> on GitHub</span></a>
 </div></nav>
 
+<main>
 <header class="hero wrap">
-  <span class="tag">Spotify Wrapped for your AI coding prompts</span>
+  <p class="tag" style="margin:0">Free AI prompt analyzer · Spotify Wrapped for your coding prompts</p>
   <h1>How am I <span class="hl">prompting</span><span style="color:var(--pink)">?</span></h1>
   <p class="sub">One command reads every Claude Code, Codex, Cursor, Gemini, Copilot & Cline chat on your machine, scores <b>how you prompt</b> — and your English — then rewrites your worst prompts and coaches you to get better.</p>
   <div class="term"><span><span class="d">$</span> npx howamiprompting</span><button class="btn small" id="copyCmd">Copy</button></div>
   <div class="trust"><span class="pill">🔒 100% local</span><span class="pill">🙅 No sign-up</span><span class="pill">🧠 Uses the AI you already have</span><span class="pill">💸 Free & open source</span></div>
-  <div class="shots"><img class="a" src="img/wrapped-persona.png" alt="Your prompting personality"><img class="b" src="img/wrapped-score.png" alt="Your prompting score"><img class="c" src="img/report.png" alt="Full report"></div>
+  <div class="shots"><img class="a" src="img/wrapped-persona.webp" width="1280" height="800" alt="Wrapped-style slide revealing your AI prompting personality, e.g. The Rage Prompter" loading="lazy" decoding="async"><img class="b" src="img/wrapped-score.webp" width="1280" height="800" alt="Your AI prompting score out of 100 with a one-line verdict" loading="lazy" decoding="async"><img class="c" src="img/report.webp" width="1280" height="800" alt="How Am I Prompting? report: prompting score, six skill bars for clarity, context, specificity, structure, efficiency and English" fetchpriority="high" decoding="async"></div>
 </header>
 
 <section style="padding-top:40px"><div class="wrap" style="text-align:center">
-  <h3>Reads your history from</h3>
+  <h2 style="font-size:clamp(24px,3vw,32px)">Analyzes prompts from every AI coding tool you use</h2><p style="color:#3b3854;max-width:720px;margin:0 auto">Claude Code prompts, Cursor chats, Codex sessions, Copilot Chat and more — found automatically on your machine.</p>
   <div class="tools"><span>Claude Code</span><span>Codex CLI</span><span>Cursor</span><span>Gemini CLI</span><span>GitHub Copilot</span><span>Windsurf</span><span>Antigravity</span><span>Cline</span><span>Roo Code</span><span>Kilo Code</span><span>Continue</span><span>OpenCode</span><span>Aider</span><span>SpecStory</span><span>+ any export</span></div>
 </div></section>
 
@@ -112,17 +148,24 @@ footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(
     <div class="card feat"><div class="e">🎮</div><h3>Practice mode</h3><p>Four timed mini-games built from your weak spots. No paste, no spell-check. Re-run monthly to watch your score climb.</p></div>
   </div>
   <div class="grid2" style="margin-top:60px">
-    <img class="shot" src="img/makeovers.png" alt="Prompt makeovers" loading="lazy">
+    <img class="shot" src="img/makeovers.webp" width="1280" height="800" alt="Prompt makeover: a vague Claude Code prompt rewritten with symptom, expected behaviour and relevant files" loading="lazy" decoding="async">
     <div><span class="tag">Makeovers</span><h2 style="margin-top:14px">"fix the login its not working" → a prompt that works first time</h2><p style="font-size:18px">Most wasted agent turns come from prompts that make the AI guess. See exactly which of yours do — and how to rewrite them.</p></div>
   </div>
   <div class="grid2" style="margin-top:60px">
     <div><span class="tag">English</span><h2 style="margin-top:14px">Grammar slips become ambiguous instructions</h2><p style="font-size:18px">"why because the token is expire" costs you a turn. Get your real mistakes, the fix and the rule — then practise.</p></div>
-    <img class="shot" src="img/english.png" alt="English feedback" loading="lazy">
+    <img class="shot" src="img/english.webp" width="1280" height="800" alt="English grammar feedback for developer prompts with CEFR level and corrected mistakes" loading="lazy" decoding="async">
   </div>
 </div></section>
 
+<section id="tips"><div class="wrap">
+  <p class="tag" style="margin:0">Prompting tips</p>
+  <h2 style="margin-top:14px">How to write better prompts for Claude Code, Cursor &amp; Codex</h2>
+  <p style="font-size:19px;max-width:760px;color:#3b3854">The habits that separate prompts that work first time from prompts that burn ten turns. How Am I Prompting? measures every one of them in your real history.</p>
+  <div class="grid4" style="margin-top:26px"><article class="card"><div style="font-size:34px">🎯</div><h3>State one clear goal</h3><p style="margin:0;color:#3b3854">&quot;fix the login&quot; → &quot;Login returns 401 after 30 minutes idle; it should refresh the token silently.&quot;</p></article><article class="card"><div style="font-size:34px">🧭</div><h3>Give current vs expected behaviour</h3><p style="margin:0;color:#3b3854">Say what happens now, what should happen, and paste the error with one line of your own theory.</p></article><article class="card"><div style="font-size:34px">📁</div><h3>Point to the files</h3><p style="margin:0;color:#3b3854">Name the files, functions or pages involved so the agent doesn&#x27;t have to guess where to look.</p></article><article class="card"><div style="font-size:34px">🚧</div><h3>Add constraints and scope</h3><p style="margin:0;color:#3b3854">&quot;Only change checkout.tsx — don&#x27;t touch the API.&quot; Constraints prevent surprise rewrites.</p></article><article class="card"><div style="font-size:34px">🔢</div><h3>One task at a time</h3><p style="margin:0;color:#3b3854">Split &quot;add export and also fix the filter and also the date picker&quot; into numbered steps.</p></article><article class="card"><div style="font-size:34px">📌</div><h3>Set house rules once</h3><p style="margin:0;color:#3b3854">Move &quot;use pnpm&quot;, &quot;TypeScript strict&quot;, &quot;no comments&quot; into CLAUDE.md, AGENTS.md or .cursor/rules.</p></article><article class="card"><div style="font-size:34px">✍️</div><h3>Write full sentences</h3><p style="margin:0;color:#3b3854">Capital letters, full stops and correct tense remove ambiguity. Grammar slips become wrong instructions.</p></article><article class="card"><div style="font-size:34px">🔁</div><h3>Break the "still not working" loop</h3><p style="margin:0;color:#3b3854">Re-prompting with no new information repeats the same failed attempt. Add what changed.</p></article></div>
+</div></section>
+
 <section id="how" class="dark"><div class="wrap">
-  <h2 style="color:var(--yellow)">How it works</h2>
+  <h2 style="color:var(--yellow)">How it works: analyze your AI prompts in 2 minutes</h2>
   <div class="steps" style="margin-top:26px">
     <div class="card"><div><h3>Scan, locally</h3><p>Read-only scan of your AI tools' history folders. Only what <b>you</b> typed is kept — replies, tool output and pasted code/logs are dropped. Keys, tokens and passwords are redacted.</p></div></div>
     <div class="card"><div><h3>Measure</h3><p>Dozens of stats are computed on your machine: length, timing, one-word "ok"s, frustration, context-giving, repeated instructions, punctuation, grammar patterns.</p></div></div>
@@ -131,20 +174,26 @@ footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(
 </div></section>
 
 <section id="privacy"><div class="wrap grid2">
-  <div><span class="tag">Privacy</span><h2 style="margin-top:14px">Your prompts never touch our servers.</h2><p style="font-size:18px">There is no account and no telemetry in the CLI. The deep analysis runs through <b>your own</b> AI login or key. Want zero network? Run <code>npx howamiprompting --no-ai</code> or use Ollama.</p><p style="font-size:18px">It's all <a href="https://github.com/theavijitsarkar/howamiprompting">open source</a> — read every line.</p></div>
-  <img class="shot" src="img/share-card.png" alt="Share card" loading="lazy">
+  <div><span class="tag">Privacy</span><h2 style="margin-top:14px">Your prompts never touch our servers.</h2><p style="font-size:18px">There is no account and no telemetry in the CLI. The deep analysis runs through <b>your own</b> AI login or key. Want zero network? Use a local Ollama model.</p><p style="font-size:18px">It's all <a href="https://github.com/theavijitsarkar/howamiprompting">open source</a> — read every line.</p></div>
+  <img class="shot" src="img/share-card.webp" width="1200" height="630" alt="Shareable prompting score card with persona and six skill scores" loading="lazy" decoding="async">
 </div></section>
 
 
 
-<section id="faq" style="padding-top:20px"><div class="wrap" style="max-width:820px">
-  <h2>FAQ</h2>
-  <details><summary>Does it cost anything?</summary><p>No. It's free and MIT-licensed. The analysis uses a little of your own Claude Code / Codex / Gemini quota (a few calls), or nothing at all with <code>--no-ai</code> or Ollama.</p></details>
-  <details><summary>What do I need installed?</summary><p>Node.js 18.17+. For the deep analysis: Claude Code, Codex CLI, Gemini CLI, an Anthropic/OpenAI/OpenRouter API key, or Ollama. Cursor history needs Node 22.5+ or the <code>sqlite3</code> command (built into macOS).</p></details>
-  <details><summary>Is it only about English?</summary><p>No — English is one of six skills. The others are clarity, context, specificity, structure and efficiency: the things that decide whether your agent gets it right first time.</p></details>
-  <details><summary>My tool isn't supported</summary><p>Run <code>npx howamiprompting --include my-export.md</code> with any Markdown/JSON/text export, and open an issue so we add a collector.</p></details>
-  <details><summary>Can I share my report?</summary><p>Yes — download a share card PNG, or send your full report as a link or a single .html file. The report is packed inside the link itself, so nothing is uploaded anywhere.</p></details>
-  <details><summary>Where is my data stored?</summary><p>Only on your machine, in <code>~/.howamiprompting/</code> (your past scores, so you can track progress). Delete the folder any time.</p></details>
+<section id="faq" style="padding-top:20px"><div class="wrap" style="max-width:860px">
+  <h2>Frequently asked questions</h2>
+  <details open><summary><h3 style="display:inline;font-size:18px">What is How Am I Prompting?</h3></summary><p>How Am I Prompting? is a free, open-source command-line tool for developers. Run <code>npx howamiprompting</code> and it reads the prompts you have written to AI coding assistants such as Claude Code, Cursor, Codex, Gemini CLI and GitHub Copilot, scores how well you prompt, rewrites your weakest prompts and gives you a personal improvement plan. It's like Spotify Wrapped for your AI coding prompts.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">How do I write better prompts for Claude Code, Cursor or Codex?</h3></summary><p>State one clear goal, describe the current behaviour and the expected behaviour, point to the relevant files, add constraints (what not to touch) and say what done looks like. Give one task at a time or number the steps. When something fails, paste the new error with one line of your own theory instead of writing "still not working". Put rules you repeat every session into a CLAUDE.md or AGENTS.md file. How Am I Prompting? checks your real prompts against all of these.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">Which AI coding tools are supported?</h3></summary><p>Claude Code, OpenAI Codex CLI, Cursor (Chat, Composer and Agent), GitHub Copilot Chat in VS Code, Gemini CLI, Windsurf, Antigravity, Trae, Kiro, Cline, Roo Code, Kilo Code, Continue, OpenCode, Aider and SpecStory. Any other tool works by importing an export file with <code>--include</code>.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">Is it safe? Does it upload my code or prompts?</h3></summary><p>Your prompts are never sent to us. The tool reads your chat history locally, keeps only what you typed, removes pasted code and logs, and redacts API keys, tokens and passwords. For the deep analysis it sends a small sample of prompts through the AI agent you already use (your own Claude Code, Codex, Gemini or API key), or a local Ollama model that never leaves your machine. The code is open source on GitHub.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">Is How Am I Prompting? free?</h3></summary><p>Yes. It is free and MIT-licensed. There is no account, no sign-up and no paid plan. The analysis uses a few calls of your own AI quota, or none at all with a local Ollama model.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">Do I need an API key?</h3></summary><p>No. If you have Claude Code, Codex CLI or Gemini CLI installed and logged in, it uses that. It can also use an ANTHROPIC_API_KEY, OPENAI_API_KEY or OPENROUTER_API_KEY, or a local Ollama model. If you have none of them, the CLI helps you set one up — for example the free Gemini CLI with a Google account.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">How is the prompting score calculated?</h3></summary><p>Your prompts are scored from 0 to 100 on six skills: clarity, context, specificity, structure, efficiency and English. Your own AI agent reads a stratified sample of about 180 prompts in batches, and local metrics (prompt length, one-word replies, frustration loops, context-giving, repeated instructions, punctuation and grammar patterns) are computed on your machine. The overall score is a weighted average of the six skills.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">What is a CLAUDE.md or AGENTS.md file and how does this help?</h3></summary><p>CLAUDE.md (Claude Code), AGENTS.md (Codex and others), GEMINI.md, .cursor/rules and copilot-instructions.md are rules files your AI agent reads at the start of every session. How Am I Prompting? finds instructions you keep repeating, like "use pnpm" or "don't add comments", and generates a ready-to-paste rules file so you never type them again.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">Does it check my English and grammar?</h3></summary><p>Yes. English is one of the six skills. It shows your real grammar mistakes with corrections and the rule behind each one, estimates your CEFR level (A2 to C2) and only judges your prose, never your code. Practice mode has four timed mini-games built from your own weak spots.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">Can I share my report?</h3></summary><p>Yes. Download a share card image for X or LinkedIn, or share your full report as a link or a single HTML file. The report is packed inside the link itself, so nothing is uploaded to a server.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">What do I need installed?</h3></summary><p>Node.js 18.17 or newer. Reading Cursor history needs Node.js 22.5+ or the sqlite3 command, which comes with macOS. It works on macOS, Linux and Windows.</p></details>
+  <details><summary><h3 style="display:inline;font-size:18px">Where is my data stored?</h3></summary><p>Only on your own computer, in <code>~/.howamiprompting/</code>, so you can track your score over time. Clear it any time with <code>npx howamiprompting --reset</code>.</p></details>
 </div></section>
 
 <section class="dark" style="text-align:center"><div class="wrap">
@@ -163,6 +212,7 @@ footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(
   </div>
 </div></section>
 
+</main>
 <footer>Made with ❤️ in Kolkata by <a href="https://avijitsarkar.com">Avijit Sarkar</a> · <a href="https://github.com/theavijitsarkar/howamiprompting">GitHub</a> · <a href="https://www.npmjs.com/package/howamiprompting">npm</a> · MIT licensed</footer>
 <div class="toast" id="toast"></div>
 <script>

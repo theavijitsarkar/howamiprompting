@@ -68,7 +68,7 @@
     const topAck = h.topConfirms.find(x => !/^(thanks|thank you|ty)$/.test(x.text));
     const said = [[topAck ? `"${topAck.text}"` : '"ok"', topAck?.count || 0], ['"please"', Math.round(h.pleasePct * t.prompts / 100)], ['"thanks"', Math.round(h.thanksPct * t.prompts / 100)]];
     sl.push({ c: 's-pink', html: `<div class="t1">Things you said a lot</div><div class="counters">${said.map(([w, n]) => `<div><b data-count="${n}">0</b>${esc(w)}</div>`).join('')}</div><div class="t2">${h.confirmPct > 15 ? `${h.confirmPct}% of your prompts were just a one-word nod. The agent is driving.` : h.pleasePct > 15 ? 'Your AI feels respected. When the robots take over, you will be spared.' : `"${esc((s.openers[0]?.text) || 'can you')}" is how you start most prompts.`}</div>` });
-    if (h.frustrationPct > 3 || h.swears) sl.push({ c: 's-orange', html: `<div class="t1">Things got heated</div><div class="big">${h.frustrationPct}%</div><div class="t1">of your prompts were… frustrated.</div>${s.examples.frustration[0] ? `<div class="q">“${esc(censor(s.examples.frustration[0]))}”</div>` : ''}<div class="t2">${h.swears ? `${h.swears} swear${h.swears > 1 ? 's' : ''} detected. ` : ''}${s.sessions.rageSessions ? `${s.sessions.rageSessions} sessions turned into rage spirals.` : ''}</div>` });
+    if (ai?.fun_facts?.length) sl.push({ c: 's-orange', html: `<div class="t1">Things your AI noticed 👀</div><div style="max-width:760px;margin-top:22px;display:grid;gap:14px">${ai.fun_facts.slice(0, 3).map((f, k) => `<div class="q" style="font-family:var(--font);font-size:clamp(17px,2.2vw,23px);font-weight:700;animation-delay:${.3 + k * .35}s">${esc(censor(f))}</div>`).join('')}</div>` });
     sl.push({ c: 's-purple', html: `<div class="t1">Your prompting personality</div><div class="big" style="font-size:clamp(90px,16vw,170px)">${s.persona.emoji}</div><div class="t1" style="font-size:clamp(36px,6vw,64px)">${esc(s.persona.name)}</div><div class="t2">${esc(ai?.persona_note || s.persona.blurb)}</div><div class="chips" style="justify-content:center;margin-top:18px">${s.persona.badges.map(b => `<span class="chip">${b.emoji} ${esc(b.label)}</span>`).join('')}</div>` });
     sl.push({ c: 's-yellow', score: true, html: `<div class="t1">Your prompting score</div><div class="big" data-count="${R.scores.overall}">0</div><div class="t1">${esc(ai?.headline || 'out of 100')}</div><div class="t2">${ai ? esc(ai.level || '') : 'Run with an AI agent for the full coaching report.'}</div><div style="margin-top:26px"><button class="btn pink" style="font-size:21px;padding:16px 30px" id="toReport">See my full report →</button></div>` });
     return sl;
@@ -120,13 +120,12 @@
     const rules = ai?.rules_file?.length ? ai.rules_file : s.repeated.map(r => r.text);
     const el = $('#v-report');
     el.innerHTML = `
-      ${!ai ? `<div class="banner">🧠 This is the <b>local-only</b> report (heuristic scores). ${R.aiError ? `The AI analysis failed: <i>${esc(R.aiError.slice(0, 140))}</i>. ` : ''}For real coaching — prompt makeovers, English feedback and a personal plan — install <b>Claude Code</b>, <b>Codex</b> or <b>Gemini CLI</b> (or set an API key / run Ollama) and run <code>npx howamiprompting</code> again.</div>` : ''}
       <div class="card"><div class="hero">
         ${dial(sc.overall)}
         <div>
           <div class="row">${ai?.level ? `<span class="level">${esc(ai.level)}</span>` : ''}${delta != null ? `<span class="delta ${delta >= 0 ? 'up' : 'down'}">${delta >= 0 ? '▲ +' : '▼ '}${delta} since last run</span>` : ''}<span class="pill">${num(s.totals.prompts)} prompts · ${s.tools.length} tools</span>${R.agent ? `<span class="pill">🧠 analysed by ${esc(R.agent.label)}</span>` : ''}</div>
-          <div class="headline">${esc(ai?.headline || `You prompt like ${s.persona.name.replace(/^The /, 'a ')}.`)}</div>
-          <p style="font-size:17px;margin:0">${esc(ai?.summary || s.persona.blurb)}</p>
+          <div class="headline">${esc(ai.headline)}</div>
+          <p style="font-size:17px;margin:0">${esc(ai.summary)}</p>
         </div>
       </div></div>
 
@@ -139,7 +138,7 @@
         </div>
       </div>
 
-      ${ai ? `
+      
       <div class="section-head"><span class="tag">Coaching</span><h2>What's working · what's not</h2></div>
       <div class="grid2">
         <div class="card"><h3>💚 Keep doing this</h3>${(ai.strengths || []).map(x => `<div class="good"><b>✓ ${esc(x.title)}</b>${esc(x.detail)}${x.example ? `<br><q>${esc(x.example)}</q>` : ''}</div>`).join('')}</div>
@@ -151,9 +150,6 @@
 
       <div class="section-head"><span class="tag">Makeovers</span><h2>Your real prompts, rewritten ✨</h2></div>
       ${(ai.makeovers || []).map((m, i) => `<div class="ba" style="box-shadow:var(--shadow-sm)"><div class="hd"><h4>Makeover #${i + 1}</h4><button class="btn small ghost copy" data-copy="${esc(m.rewritten)}">Copy rewrite</button></div><div class="body"><div class="was"><small class="l">Before</small>${esc(m.original)}</div><div class="arr">→</div><div class="now"><small class="l">After</small>${esc(m.rewritten)}</div></div><div class="why">${(m.why || []).map(w => `✓ ${esc(w)}`).join(' &nbsp; ')}</div></div>`).join('')}
-      ` : `
-      <div class="section-head"><span class="tag">Habits</span><h2>What your prompts say about you</h2></div>
-      <div class="card"><h3>🚩 Prompts that made the AI guess</h3>${s.examples.vague.length ? s.examples.vague.map(v => `<div class="good" style="background:#fff1f4"><q>${esc(v)}</q></div>`).join('') : '<p class="muted">None — nice!</p>'}<p class="muted">Short "fix it" prompts without symptoms or expected behaviour are the #1 cause of wasted turns.</p></div>`}
 
       <div class="section-head"><span class="tag">Set it once</span><h2>Stop repeating yourself 📌</h2></div>
       <div class="card">
@@ -163,15 +159,15 @@
         ${s.repeated.length ? `<p class="muted" style="margin-bottom:0">Detected repeats: ${s.repeated.slice(0, 5).map(r => `“${esc(r.text)}” <b>×${r.sessions} sessions</b>`).join(' · ')}</p>` : ''}
       </div>
 
-      ${ai ? `<div class="grid2" style="margin-top:24px">
+      <div class="grid2" style="margin-top:24px">
         <div class="card"><h3>🧩 Your personal prompt template</h3><div class="code"><button class="btn small ghost cbtn copy" data-copy="${esc(ai.template || '')}">Copy</button>${esc(ai.template || '')}</div></div>
         <div class="card"><h3>🗓️ Your 7-day plan</h3><ol class="plan">${(ai.plan || []).map(p => `<li>${esc(p.replace(/^Day \d+:\s*/i, ''))}</li>`).join('')}</ol></div>
-      </div>` : ''}
+      </div>
 
       <div class="section-head"><span class="tag">Stats</span><h2>Your prompting, by the numbers</h2></div>
       <div class="grid4">
         ${statTile(num(s.totals.prompts), 'prompts', 'var(--yellow)')}${statTile(s.length.median, 'median words / prompt')}${statTile(h.confirmPct + '%', 'one-word replies ("ok", "yes")', 'var(--soft-pink)')}${statTile(h.contextPct + '%', 'prompts that give context')}
-        ${statTile(h.frustrationPct + '%', 'frustrated prompts')}${statTile(h.pushbackPct + '%', 'corrections ("no", "revert")', 'var(--soft-blue)')}${statTile(h.pastePrayPct + '%', 'error pasted with no explanation')}${statTile(num(s.totals.interrupts), 'times you hit Esc on the agent', 'var(--soft-mint)')}
+        ${statTile(num(s.totals.sessions), 'sessions')}${statTile(s.totals.activeDays, 'active days', 'var(--soft-blue)')}${statTile(s.totals.longestStreak + 'd', 'longest streak')}${statTile(num(s.totals.interrupts), 'times you hit Esc on the agent', 'var(--soft-mint)')}
       </div>
       <div class="grid2" style="margin-top:22px">
         <div class="card"><h3>🕐 When you prompt</h3>${heatmap(s.time.heat)}<p class="muted" style="margin-bottom:0">Busiest: <b>${DAYS[s.time.busiestDay]}s at ${hourLabel(s.time.busiestHour)}</b> · ${s.time.nightPct}% after midnight · ${s.time.weekendPct}% on weekends · longest streak ${s.totals.longestStreak} days</p></div>
@@ -228,8 +224,7 @@
         ${statTile(e.runOnPct + '%', 'contain a 45+ word run-on sentence', e.runOnPct > 5 ? 'var(--soft-pink)' : '')}
       </div>
       ${ai?.errors?.length ? `<div class="card" style="margin-top:24px"><h3>❌ → ✅ Your real mistakes</h3><table class="t err"><tr><th>You wrote</th><th>Correct</th><th>Rule</th><th>How often</th></tr>${ai.errors.map(x => `<tr><td>${esc(x.quote)}</td><td>${esc(x.fix)}</td><td>${esc(x.rule)}</td><td>${esc(x.frequency || '')}</td></tr>`).join('')}</table></div>` : ''}
-      <div class="grid2" style="margin-top:24px">
-        <div class="card"><h3>🔁 Patterns we counted</h3>${e.patterns.length ? `<table class="t">${e.patterns.map(p => `<tr><td><b>${esc(p.label)}</b><br><span class="quote">${esc(p.example || '')}</span><br><small class="muted">${esc(p.tip)}</small></td><td style="font-weight:800;font-size:20px">×${p.count}</td></tr>`).join('')}</table>` : '<p class="muted">No common error patterns found. 👏</p>'}</div>
+      <div style="margin-top:24px">
         <div class="card"><h3>💡 Tips just for you</h3><ol class="fixes">${(ai?.tips || ['End every instruction with a full stop — it tells the model where one thought ends.', 'Capitalise "I" and sentence starts; sloppy text reads as low-priority.', 'One sentence = one instruction. Split anything with "and also".']).map(t => `<li>${esc(t)}</li>`).join('')}</ol>
         <div style="margin-top:18px"><button class="btn pink" onclick="document.querySelector('[data-view=practice]').click()">🎮 Practise my English (10 min)</button></div></div>
       </div>`;
@@ -262,7 +257,7 @@
     $('#v-practice').innerHTML = `<div class="card" style="text-align:center;padding:40px 26px">
       <span class="tag">Side quest · 9 minutes</span>
       <h2 style="margin-top:14px">Practise your <span class="hl">written English</span></h2>
-      <p class="muted" style="max-width:640px;margin:0 auto 22px;font-size:18px">Four timed mini-games${R.agent ? `, freshly written by ${esc(R.agent.label)} from <b>your</b> weak spots` : ' from the built-in question bank'}. No paste, no spell-check — just you.</p>
+      <p class="muted" style="max-width:640px;margin:0 auto 22px;font-size:18px">Four timed mini-games, freshly written by ${esc(R.agent?.label || 'your AI')} from <b>your</b> weak spots. No paste, no spell-check — just you.</p>
       <div class="grid4" style="text-align:left;margin-bottom:26px">
         ${[['👻', 'Vanishing Passage', 'Read for 45s. It disappears. Explain it.', 'var(--yellow)'], ['🔧', 'Fix-It Factory', 'Repair 3 broken sentences.', 'var(--soft-pink)'], ['🖼️', 'Picture → Paragraph', 'Turn a flow into 3 sentences.', 'var(--mint)'], ['✨', 'Prompt Glow-Up', 'Rewrite one of your real prompts.', 'var(--soft-blue)']].map(([e, t, d, c]) => `<div class="stat" style="background:${c}"><div style="font-size:30px">${e}</div><b style="display:block;margin:6px 0 4px;font-size:17px">${t}</b><span class="muted" style="font-weight:600;font-size:14px">${d}</span></div>`).join('')}
       </div>
@@ -496,6 +491,7 @@
       } else {
         $('#ptool').innerHTML = '<option value="">All tools</option>' + R.stats.tools.map(t => `<option>${esc(t.name)}</option>`).join('');
       }
+      if (!R.ai) throw new Error('This report has no AI analysis. Run  npx howamiprompting  again to create a new one.');
       renderReport(); renderEnglish();
       if (!SHARED) { practiceHome(); renderShare(); }
       let seen = null; try { seen = localStorage.getItem('hap_seen'); } catch (e) {}

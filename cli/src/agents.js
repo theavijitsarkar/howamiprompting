@@ -16,7 +16,13 @@ function run(cmd, args, input, { cwd, timeout = CLI_TIMEOUT } = {}) {
     p.stdout.on('data', d => out += d);
     p.stderr.on('data', d => err += d);
     p.on('error', e => { clearTimeout(t); reject(e); });
-    p.on('close', code => { clearTimeout(t); code === 0 ? resolve(out) : reject(new Error(`${cmd} exited ${code}: ${(err || out).slice(-400)}`)); });
+    p.on('close', code => {
+      clearTimeout(t);
+      if (code === 0) return resolve(out);
+      const e = new Error(`${cmd} exited ${code}: ${(err || out).slice(-400)}`);
+      e.stdout = out; e.stderr = err; e.code = code;
+      reject(e);
+    });
     p.stdin.on('error', () => {}); // agent may exit before reading stdin (EPIPE)
     p.stdin.end(input);
   });
@@ -44,8 +50,16 @@ export const AGENTS = {
       try {
         const args = ['-p', '--output-format', 'json'];
         if (o.model) args.push('--model', o.model);
-        const raw = await run('claude', args, prompt, { cwd: dir });
-        try { const j = JSON.parse(raw); if (j.is_error) throw new Error(j.result || 'Claude Code error'); return j.result ?? raw; } catch (e) { if (/Claude Code error/.test(e.message)) throw e; return raw; }
+        let raw;
+        try { raw = await run('claude', args, prompt, { cwd: dir, timeout: o.timeout }); }
+        catch (e) { // claude prints a JSON result even when it fails — surface its real message
+          let msg = '';
+          try { const j = JSON.parse(e.stdout || ''); msg = j.result || j.error || j.subtype || ''; } catch {}
+          throw new Error(msg || (e.stderr || e.message).slice(-300));
+        }
+        let j; try { j = JSON.parse(raw); } catch { return raw; }
+        if (j.is_error) throw new Error(j.result || j.subtype || 'Claude Code returned an error');
+        return j.result ?? raw;
       } finally { fs.rmSync(dir, { recursive: true, force: true }); }
     },
   },
@@ -59,7 +73,7 @@ export const AGENTS = {
         const args = ['exec', '--skip-git-repo-check', '-s', 'read-only', '--color', 'never', '--output-last-message', outFile];
         if (o.model) args.push('-m', o.model);
         args.push('-');
-        const raw = await run('codex', args, prompt, { cwd: dir });
+        const raw = await run('codex', args, prompt, { cwd: dir, timeout: o.timeout });
         return fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8') : raw;
       } finally { fs.rmSync(dir, { recursive: true, force: true }); }
     },
@@ -72,7 +86,7 @@ export const AGENTS = {
       try {
         const args = ['-p', 'Follow the instructions in the input above. Reply with the JSON only.'];
         if (o.model) args.push('-m', o.model);
-        return await run('gemini', args, prompt, { cwd: dir });
+        return await run('gemini', args, prompt, { cwd: dir, timeout: o.timeout });
       } finally { fs.rmSync(dir, { recursive: true, force: true }); }
     },
   },
@@ -157,4 +171,35 @@ export async function askJSON(agentId, prompt, { model, validate = () => {} } = 
     } catch (e) { last = e; }
   }
   throw last;
+}
+
+/** How to get each agent working — used by the CLI's setup helper. */
+export const SETUP = {
+  claude: { name: 'Claude Code', install: 'npm install -g @anthropic-ai/claude-code', login: ['claude'], loginHint: 'log in when asked, then type /exit', needs: 'a Claude Pro/Max plan or Anthropic Console account' },
+  codex: { name: 'Codex CLI', install: 'npm install -g @openai/codex', login: ['codex', 'login'], loginHint: 'sign in with ChatGPT in the browser window', needs: 'a ChatGPT Plus/Pro plan or OpenAI API key' },
+  gemini: { name: 'Gemini CLI', install: 'npm install -g @google/gemini-cli', login: ['gemini'], loginHint: 'choose "Login with Google", then type /quit', needs: 'a free Google account' },
+};
+
+/** Turn agent errors into something a human can act on. */
+export function explainError(agentId, message = '') {
+  const m = String(message);
+  const L = AGENTS[agentId]?.label || agentId;
+  if (/ENOENT|not found|command not found/i.test(m)) return `${L} is not installed (or not on your PATH).`;
+  if (/login|log in|logged in|authenticat|invalid api key|invalid x-api-key|incorrect api key|api key|unauthori[sz]ed|401|403|credentials|oauth/i.test(m)) return `${L} is installed but not logged in (or the key is invalid).`;
+  if (/credit balance|billing|insufficient|quota|rate.?limit|usage limit|429|exceeded/i.test(m)) return `${L} is out of credits or hit a usage/rate limit.`;
+  if (/timed out|ETIMEDOUT|ECONNREFUSED|network|fetch failed|ENOTFOUND/i.test(m)) return `${L} could not reach its servers (network problem or timeout).`;
+  if (/valid JSON/i.test(m)) return `${L} answered, but not in the expected format. A stronger model may help (--model).`;
+  return `${L} failed: ${m.slice(0, 200)}`;
+}
+
+/** Quick health check: can this agent actually answer right now? */
+export async function checkAgent(agentId, model) {
+  try {
+    const txt = await AGENTS[agentId].ask('Reply with exactly this JSON and nothing else: {"ok":true}', { model, timeout: 120000 });
+    const j = extractJSON(txt);
+    if (j.ok !== true) throw new Error('unexpected reply');
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e.message, reason: explainError(agentId, e.message) };
+  }
 }

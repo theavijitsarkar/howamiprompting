@@ -1,6 +1,6 @@
 {
   "name": "howamiprompting",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Spotify Wrapped for your AI coding prompts. Scans your Claude Code, Codex, Cursor, Gemini CLI, Copilot, Cline, Aider\u2026 chats locally, scores how you prompt (and your English), and shows you how to get better.",
   "keywords": [
     "prompt",

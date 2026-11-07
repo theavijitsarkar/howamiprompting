@@ -1,5 +1,6 @@
 // Deep analysis with the developer's own AI agent. Map (chunks) → reduce (synthesis).
 import { askJSON } from './agents.js';
+import { PERSONAS } from './stats.js';
 
 export const DIMENSIONS = {
   clarity: 'Clarity — is the ask unambiguous? One clear goal, plain words, no guessing needed.',
@@ -69,11 +70,11 @@ Return ONE JSON object, no prose:
 Limits: strengths 2-4, issues 3-6, english_errors up to 8 (empty if their English is clean).`;
 }
 
-function synthPrompt(stats, batches, sampleById, heuristic) {
+function synthPrompt(stats, batches, sampleById) {
   const avg = {};
   for (const k of Object.keys(DIMENSIONS)) {
     const v = batches.map(b => Number(b.scores?.[k])).filter(n => !isNaN(n));
-    avg[k] = v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : heuristic[k] ?? 60;
+    avg[k] = v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : null;
   }
   const worst = [...new Set(batches.flatMap(b => b.worst_ids || []))].map(id => sampleById.get(Number(id))).filter(Boolean).slice(0, 6);
   const best = [...new Set(batches.flatMap(b => b.best_ids || []))].map(id => sampleById.get(Number(id))).filter(Boolean).slice(0, 3);
@@ -85,7 +86,7 @@ function synthPrompt(stats, batches, sampleById, heuristic) {
     pushback_pct: s.habits.pushbackPct, gives_context_pct: s.habits.contextPct, paste_error_without_explanation_pct: s.habits.pastePrayPct,
     multi_ask_pct: s.habits.multiAskPct, please_pct: s.habits.pleasePct, swears: s.habits.swears, interrupts: s.totals.interrupts,
     lowercase_start_pct: s.english.lowerStartPct, no_final_punctuation_pct: s.english.noEndPunctPct, run_on_pct: s.english.runOnPct,
-    night_owl_pct: s.time.nightPct, persona: s.persona.name,
+    night_owl_pct: s.time.nightPct, weekend_pct: s.time.weekendPct,
     detected_english_patterns: s.english.patterns.slice(0, 6).map(p => `${p.label} ×${p.count}`).join(', '),
   };
   return `${COACH}
@@ -122,14 +123,17 @@ Return ONE JSON object:
  "template": "a personal fill-in-the-blanks prompt template tailored to their weaknesses (use \\n for new lines)",
  "plan": ["7 short daily drills, one per day"],
  "fun_facts": ["3 witty, true observations from the facts"],
- "persona_note": "one witty line about them as '${s.persona.name}'"
+ "persona": {"name":"The …","emoji":"one emoji","blurb":"1-2 sentences, second person, why this fits them"},
+ "persona_note": "one witty line about them as that persona"
 }
-Counts: strengths 3, weaknesses 4-5, makeovers 3 (only from the 'most improvable' list), english.errors up to 8, habits 4-5.`;
+Persona: pick the best fit from these archetypes (or invent a better one in the same style): ${PERSONAS.map(p => `${p.emoji} ${p.name} — ${p.blurb}`).join(' | ')}\nCounts: strengths 3, weaknesses 4-5, makeovers 3 (only from the 'most improvable' list), english.errors up to 8, habits 4-5.`;
 }
 
 /**
  * Run the full analysis. onStep(label, i, total) for progress.
  */
+const avgOf = (bs, k) => { const v = bs.map(b => Number(b.scores?.[k])).filter(n => !isNaN(n)); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : 0; };
+
 export async function analyze(prompts, stats, { agent, model, sampleSize = 180, batchSize = 60, concurrency = 2, onStep = () => {} } = {}) {
   const smp = sample(prompts, sampleSize);
   const byId = new Map(smp.map(p => [p.id, p]));
@@ -155,10 +159,10 @@ export async function analyze(prompts, stats, { agent, model, sampleSize = 180, 
   if (!ok.length) throw new Error('Every batch failed: ' + errors[0]);
 
   onStep('Writing your report', done, total);
-  const report = await askJSON(agent, synthPrompt(stats, ok, byId, stats.heuristic), {
-    model, validate: j => { if (!j.scores || !j.headline) throw new Error('incomplete report'); },
+  const report = await askJSON(agent, synthPrompt(stats, ok, byId), {
+    model, validate: j => { if (!j.scores || !j.headline || !j.persona?.name) throw new Error('incomplete report'); },
   });
-  for (const k of Object.keys(DIMENSIONS)) report.scores[k] = Math.max(0, Math.min(100, Math.round(Number(report.scores[k]) || stats.heuristic[k] || 60)));
+  for (const k of Object.keys(DIMENSIONS)) report.scores[k] = Math.max(0, Math.min(100, Math.round(Number(report.scores[k]) || avgOf(ok, k))));
   report.scores.overall = overallFrom(report.scores);
   report.sampled = smp.length;
   report.batchErrors = errors.length;

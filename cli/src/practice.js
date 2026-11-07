@@ -1,11 +1,5 @@
 // Practice mode: 4 timed mini-games generated from YOUR weaknesses and graded by your own agent.
-import fs from 'node:fs';
-import { askJSON } from './agents.js';
-import { ENGLISH_PATTERNS } from './stats.js';
-
-const bank = JSON.parse(fs.readFileSync(new URL('./bank.json', import.meta.url), 'utf8'));
-const pick = a => a[Math.floor(Math.random() * a.length)];
-const shuffle = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
+import { askJSON, explainError } from './agents.js';
 
 const COACH = 'You are a sharp, kind English-and-prompting coach for software developers (many are non-native English speakers). You design short, fresh exercises and grade honestly. Never reuse textbook examples.';
 
@@ -14,7 +8,8 @@ export async function generateTest({ agent, model, report, stats, worstPrompt })
   const eng = (report?.english?.errors || []).slice(0, 6).map(e => `- "${e.quote}" → "${e.fix}" (${e.rule})`).join('\n')
     || (stats?.english?.patterns || []).slice(0, 5).map(p => `- ${p.label}: "${p.example || ''}"`).join('\n');
   const projects = (stats?.projects || []).slice(0, 4).map(p => p.name).join(', ');
-  if (agent) {
+  if (!agent) throw new Error('Practice needs your AI agent — run npx howamiprompting again to connect one.');
+  {
     try {
       const t = await askJSON(agent, `${COACH}
 
@@ -38,16 +33,8 @@ Return ONE JSON object:
       if (worstPrompt) t.rewrite.original = worstPrompt;
       t.source = agent;
       return t;
-    } catch (e) { /* fall through to the offline bank */ }
+    } catch (e) { throw new Error(explainError(agent, e.message)); }
   }
-  const p = pick(bank.passages), d = pick(bank.diagrams);
-  return {
-    source: 'offline',
-    passage: { text: p.text, questions: p.questions, key_facts: p.key_facts.map(k => k.fact), model_answer: '', kw: p.key_facts },
-    fixit: shuffle(bank.fixit).slice(0, 3),
-    diagram: { ...d, model_answer: '' },
-    rewrite: { original: worstPrompt || pick(bank.rewrites), context: '', model_answer: '' },
-  };
 }
 
 export function publicTest(t) {
@@ -61,7 +48,8 @@ export function publicTest(t) {
 }
 
 export async function gradeTest({ agent, model, test, answers }) {
-  if (agent) {
+  if (!agent) throw new Error('Grading needs your AI agent.');
+  {
     try {
       const r = await askJSON(agent, `${COACH}
 
@@ -80,9 +68,8 @@ Return ONE JSON object:
  "levels":{"passage":{"score":0,"feedback":"","mistakes":[{"wrote":"","fix":"","why":""}]},"fixit":{"score":0,"feedback":"","items":[{"score":0,"note":""},{"score":0,"note":""},{"score":0,"note":""}]},"diagram":{"score":0,"feedback":"","mistakes":[]},"rewrite":{"score":0,"feedback":"","mistakes":[]}},
  "cefr":"A2|B1|B2|C1|C2","verdict":"2 sentences","top_fixes":["3 specific habits"]}`, { model, validate: j => { if (!j.criteria?.grammar_tense) throw new Error('bad grade'); } });
       return finalize(r, test, answers, agent);
-    } catch (e) { /* offline fallback below */ }
+    } catch (e) { throw new Error(explainError(agent, e.message)); }
   }
-  return finalize(offlineGrade(test, answers), test, answers, 'offline');
 }
 
 function finalize(r, test, answers, source) {
@@ -95,25 +82,5 @@ function finalize(r, test, answers, source) {
     levels: r.levels || {}, verdict: r.verdict || '', top_fixes: r.top_fixes || [],
     models: { passage: test.passage.model_answer, fixit: test.fixit.map(f => f.reference), diagram: test.diagram.model_answer, rewrite: test.rewrite.model_answer },
     test: publicTest(test), answers,
-  };
-}
-
-function offlineGrade(test, a) {
-  const sents = t => (t.trim().match(/[^.!?]+[.!?]+|[^.!?]+$/g) || []).filter(s => s.trim().length > 1);
-  const errs = t => ENGLISH_PATTERNS.reduce((n, [, re]) => n + (re.test(t) ? 1 : 0), 0) + (sents(t).filter(s => /^\s*[a-z]/.test(s)).length);
-  const bound = t => !t.trim() ? 0 : Math.max(0, 100 - (/[.!?]\s*$/.test(t.trim()) ? 0 : 20) - sents(t).filter(s => s.split(/\s+/).length > 30).length * 18);
-  const gram = t => !t.trim() ? 0 : Math.max(0, 100 - errs(t) * 15);
-  const kw = test.passage.kw || [];
-  const lt = (a.passage || '').toLowerCase();
-  const comp = kw.length ? Math.round(100 * kw.filter(k => k.keywords.some(w => lt.includes(w))).length / kw.length) : 50;
-  const all = [a.passage, ...(a.fixit || []), a.diagram, a.rewrite].join(' ');
-  return {
-    criteria: {
-      sentence_boundaries: { score: Math.round((bound(a.passage || '') + bound(a.diagram || '') + bound(a.rewrite || '')) / 3), comment: '' },
-      grammar_tense: { score: gram(all), comment: '' },
-      comprehension: { score: comp, comment: '' },
-      clarity: { score: /\b(if|once|when|after|so|because|then|as a result)\b/i.test(a.diagram || '') ? 75 : 55, comment: '' },
-    },
-    levels: {}, verdict: 'Graded by the basic offline checker. Connect an AI agent for detailed feedback.', top_fixes: [],
   };
 }

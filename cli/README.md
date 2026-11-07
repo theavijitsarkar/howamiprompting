@@ -62,14 +62,14 @@ Missing your tool? [Open an issue](https://github.com/theavijitsarkar/howamiprom
 4. **Coach with your own AI** — a stratified sample (~180 prompts) goes to the agent **you already use**, in batches, then a synthesis pass writes the report. We auto-detect, in order:
    `claude` (Claude Code) → `codex` → `gemini` → `ANTHROPIC_API_KEY` → `OPENROUTER_API_KEY` → `OPENAI_API_KEY` → **Ollama** (fully offline)
 
-You'll be asked before anything is sent. Use `--no-ai` for a stats-only report where nothing leaves your machine at all.
+You'll be asked before anything is sent. **An AI is required** — every score and insight comes from it. If none of the above works, the CLI walks you through setting one up (it can install Gemini CLI, Claude Code or Codex and open their login, or take an API key for one run). Want everything offline? Use Ollama.
 
 ## Privacy
 
 - No account, no telemetry, no analytics in the CLI or the report.
 - Your prompts are **never** sent to us. With an agent, the sample goes through *your own* Claude Code / Codex / Gemini / API key / local Ollama.
 - The report runs on `127.0.0.1` with a random per-run token.
-- History lives in `~/.howamiprompting/` — delete it any time.
+- History lives in `~/.howamiprompting/` — wipe it with `npx howamiprompting --reset`, or start over with `--fresh`.
 - Sharing is serverless: share links carry the report inside the URL fragment (`#…`), which browsers never send to any server.
 
 ## Options
@@ -79,12 +79,13 @@ npx howamiprompting [options]
 
 --agent <id>      claude | codex | gemini | anthropic | openrouter | openai | ollama
 --model <name>    model override for that agent (e.g. haiku, sonnet)
---no-ai           local stats only — nothing leaves your machine
 --sample <n>      prompts sent for deep analysis (default 180)
 --since <days>    only look at the last N days
 --include <file>  also import a chat export (repeatable)
 --roots <dir>     extra folder to search for Aider / SpecStory histories
 --last            re-open your last report without rescanning
+--fresh           delete saved history, then run a brand-new analysis
+--reset           delete saved history (~/.howamiprompting) and exit
 --json <file>     also write the report as JSON
 --no-open         don't open the browser
 -y, --yes         no questions
@@ -108,7 +109,7 @@ Requires Node.js 18.17+. Cursor history needs Node 22.5+ (built-in SQLite) **or*
 ```bash
 git clone https://github.com/theavijitsarkar/howamiprompting && cd howamiprompting/cli
 node test/make-fixtures.js /tmp/fakehome          # fake histories for every tool
-HOME=/tmp/fakehome node bin/howamiprompting.js --no-ai
+HOME=/tmp/fakehome node bin/howamiprompting.js   # needs an agent (claude/codex/gemini/API key/ollama)
 ```
 
 Ideas that would be awesome: more collectors, better persona rules, translations of the report, more practice games.

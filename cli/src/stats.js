@@ -158,8 +158,8 @@ export function computeStats(prompts, { interrupts = 0 } = {}) {
     sessions: { avgPrompts: sess.length ? Math.round(10 * n / sess.length) / 10 : 0, longest: Math.max(0, ...sess.map(s => s.n)), rageSessions: sess.filter(s => s.frustr >= 3).length },
     examples: { swear: examples.swear, frustration: examples.frustr, vague: examples.vague, pastePray: examples.pastePray },
   };
-  stats.heuristic = heuristicScores(stats);
-  stats.persona = persona(stats);
+  stats.badges = badges(stats);
+  stats.persona = null; // decided by the AI analysis
   return stats;
 }
 
@@ -168,34 +168,18 @@ function dedupeGrams(list) {
   return list.filter(a => !list.some(b => b !== a && b.text.includes(a.text) && b.count >= a.count * 0.8) && !list.some(b => b !== a && a.text.includes(b.text) && b.count > a.count * 1.2));
 }
 
-const clamp = v => Math.max(0, Math.min(100, Math.round(v)));
-export function heuristicScores(s) {
-  const h = s.habits, e = s.english, L = s.length;
-  const lenScore = L.median < 4 ? 35 : L.median < 8 ? 55 : L.median < 15 ? 72 : L.median < 60 ? 85 : 75;
-  const clarity = clamp(lenScore - h.vaguePct * 1.2 - h.multiAskPct * 0.3 + 5);
-  const context = clamp(30 + h.contextPct * 1.4 + Math.min(15, h.pastedCodePct * 0.3) - h.pastePrayPct * 1.2);
-  const specificity = clamp(45 + h.contextPct * 0.8 - h.vaguePct * 1.5 - h.confirmPct * 0.3 + (L.median > 12 ? 10 : 0));
-  const efficiency = clamp(88 - h.frustrationPct * 1.6 - h.pushbackPct * 0.9 - h.swearPct * 0.8);
-  const structure = clamp(82 - h.multiAskPct * 0.5 - e.runOnPct * 0.7 - (L.avg > 120 ? 10 : 0) - (L.median < 5 ? 12 : 0));
-  const englishScore = clamp(92 - e.lowerStartPct * 0.12 - e.noEndPunctPct * 0.12 - e.lowerIPct * 0.4 - e.runOnPct * 0.8 - Math.min(30, e.patterns.reduce((a, p) => a + p.count, 0) / Math.max(1, s.totals.prompts) * 220));
-  const overall = clamp(0.2 * clarity + 0.22 * context + 0.18 * specificity + 0.12 * structure + 0.13 * efficiency + 0.15 * englishScore);
-  return { overall, clarity, context, specificity, structure, efficiency, english: englishScore };
-}
-
-const PERSONAS = [
-  { id: 'architect', name: 'The Architect', emoji: '📐', blurb: 'You brief your AI like a senior engineer: goals, constraints, context. It shows.', test: s => s.habits.contextPct / 35 * (s.length.median > 18 ? 1.2 : 0.8) },
-  { id: 'novelist', name: 'The Novelist', emoji: '📜', blurb: 'Your prompts are essays. Rich context — but the important ask sometimes gets buried.', test: s => s.length.avg / 70 },
-  { id: 'sniper', name: 'The Sniper', emoji: '🎯', blurb: 'Short, precise, effective. You say exactly what you need and move on.', test: s => (s.length.median >= 8 && s.length.median <= 25 ? 1 : 0.4) * (1 - s.habits.vaguePct / 30) * (1 - s.habits.frustrationPct / 30) },
-  { id: 'yes', name: 'The Yes-Machine', emoji: '👍', blurb: '"ok", "continue", "yes". You let the agent drive — sometimes straight into a wall.', test: s => s.habits.confirmPct / 22 },
-  { id: 'paste', name: 'The Paste-and-Pray', emoji: '🙏', blurb: 'Error in, fix out. You paste the stack trace and hope. Add one line of context and watch it work.', test: s => s.habits.pastePrayPct / 12 },
-  { id: 'rage', name: 'The Rage Prompter', emoji: '🌋', blurb: 'When the AI messes up, it hears about it. Your frustration is valid — but it costs you turns.', test: s => (s.habits.frustrationPct + s.habits.swearPct * 2) / 16 },
-  { id: 'diplomat', name: 'The Polite Diplomat', emoji: '🎩', blurb: '"Please" and "thank you" — your AI has never felt so respected.', test: s => (s.habits.pleasePct + s.habits.thanksPct) / 30 },
-  { id: 'speedrunner', name: 'The Speedrunner', emoji: '⚡', blurb: 'Three-word prompts at 200 WPM. Fast — but the AI is guessing half the time.', test: s => s.length.median < 7 ? (8 - s.length.median) / 4 : 0 },
-  { id: 'micromanager', name: 'The Micromanager', emoji: '🔍', blurb: '"No, not like that." You course-correct a lot. Front-load the details to skip the back-and-forth.', test: s => s.habits.pushbackPct / 14 },
+export const PERSONAS = [
+  { id: 'architect', name: 'The Architect', emoji: '📐', blurb: 'You brief your AI like a senior engineer: goals, constraints, context. It shows.', },
+  { id: 'novelist', name: 'The Novelist', emoji: '📜', blurb: 'Your prompts are essays. Rich context — but the important ask sometimes gets buried.', },
+  { id: 'sniper', name: 'The Sniper', emoji: '🎯', blurb: 'Short, precise, effective. You say exactly what you need and move on.', },
+  { id: 'yes', name: 'The Yes-Machine', emoji: '👍', blurb: '"ok", "continue", "yes". You let the agent drive — sometimes straight into a wall.', },
+  { id: 'paste', name: 'The Paste-and-Pray', emoji: '🙏', blurb: 'Error in, fix out. You paste the stack trace and hope. Add one line of context and watch it work.', },
+  { id: 'rage', name: 'The Rage Prompter', emoji: '🌋', blurb: 'When the AI messes up, it hears about it. Your frustration is valid — but it costs you turns.', },
+  { id: 'diplomat', name: 'The Polite Diplomat', emoji: '🎩', blurb: '"Please" and "thank you" — your AI has never felt so respected.', },
+  { id: 'speedrunner', name: 'The Speedrunner', emoji: '⚡', blurb: 'Three-word prompts at 200 WPM. Fast — but the AI is guessing half the time.', },
+  { id: 'micromanager', name: 'The Micromanager', emoji: '🔍', blurb: '"No, not like that." You course-correct a lot. Front-load the details to skip the back-and-forth.', },
 ];
-export function persona(s) {
-  const ranked = PERSONAS.map(p => ({ ...p, score: p.test(s) || 0 })).sort((a, b) => b.score - a.score);
-  const main = ranked[0];
+export function badges(s) {
   const badges = [];
   if (s.time.nightPct > 20) badges.push({ emoji: '🦉', label: 'Night Owl', detail: `${s.time.nightPct}% of prompts after midnight` });
   if (s.time.weekendPct > 30) badges.push({ emoji: '🏖️', label: 'Weekend Warrior', detail: `${s.time.weekendPct}% on weekends` });
@@ -204,5 +188,5 @@ export function persona(s) {
   if (s.habits.pleasePct > 20) badges.push({ emoji: '🎩', label: 'Polite', detail: `"please" in ${s.habits.pleasePct}% of prompts` });
   if (s.habits.swears > 10) badges.push({ emoji: '🤬', label: 'Potty Mouth', detail: `${s.habits.swears} swears` });
   if (s.totals.prompts > 2000) badges.push({ emoji: '🏋️', label: 'Power User', detail: `${s.totals.prompts.toLocaleString()} prompts` });
-  return { id: main.id, name: main.name, emoji: main.emoji, blurb: main.blurb, runnerUp: ranked[1]?.name, badges };
+  return badges;
 }

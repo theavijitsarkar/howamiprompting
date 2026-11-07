@@ -1,0 +1,92 @@
+# How Am I Prompting?
+
+> How Am I Prompting? (howamiprompting) is a free, open-source command-line tool that analyzes the prompts a developer writes to AI coding assistants — Claude Code, Cursor, OpenAI Codex CLI, Gemini CLI, GitHub Copilot, Windsurf, Cline, Roo Code and more — and scores how well they prompt. Run `npx howamiprompting`. It works 100% locally, needs no sign-up, and uses the developer's own AI agent (or none) for the analysis. It is often described as "Spotify Wrapped for your AI coding prompts".
+
+Key facts:
+- Install/run: `npx howamiprompting` (Node.js 18.17+; macOS, Linux, Windows). npm package: `howamiprompting`.
+- Price: free, MIT license. No account, no telemetry in the CLI.
+- Output: a local web report with a prompting score (0–100) across six skills — clarity, context, specificity, structure, efficiency and English — plus a Wrapped-style story, a prompting personality, prompt makeovers (real prompts rewritten), English grammar feedback with a CEFR estimate, a generated CLAUDE.md / AGENTS.md / .cursor/rules / GEMINI.md / copilot-instructions.md file, a personal prompt template, a 7-day plan, practice mini-games, progress over time, and a shareable report link or HTML file.
+- Privacy: only the user's own typed messages are read; AI replies, tool output and pasted code/logs are dropped; API keys, tokens and passwords are redacted. Prompts are never sent to howamiprompting.com. Deep analysis runs through the user's own Claude Code, Codex CLI, Gemini CLI, Anthropic/OpenAI/OpenRouter API key, or a local Ollama model. A local Ollama model keeps everything offline.
+- Creator: Avijit Sarkar, founder from Kolkata, India (https://avijitsarkar.com), maker of GoDial and HyperScreenshot.
+
+## Docs
+- [Website](https://howamiprompting.com/): overview, features, prompting tips and FAQ
+- [GitHub repository & README](https://github.com/theavijitsarkar/howamiprompting): source code, supported tools, options, how the analysis works
+- [npm package](https://www.npmjs.com/package/howamiprompting): install and versions
+- [Full LLM reference](https://howamiprompting.com/llms-full.txt): detailed description, options, scoring and FAQ
+
+## Optional
+- [Author](https://avijitsarkar.com): Avijit Sarkar
+
+
+---
+
+# Full reference
+
+## What it does
+1. Scans local chat histories of AI coding tools (read-only).
+2. Keeps only the developer's own messages, removes pasted code/logs, redacts secrets.
+3. Computes local stats: prompt count, sessions, tools, busiest hour, median prompt length, one-word replies ("ok", "continue"), frustration loops ("still not working"), corrections, context-giving, repeated instructions, punctuation and grammar patterns. Assigns a prompting personality (e.g. The Architect, The Sniper, The Yes-Machine, The Paste-and-Pray, The Rage Prompter).
+4. Sends a stratified sample (~180 prompts) to the user's own AI agent for coaching: scores, strengths, weaknesses with before/after rewrites, prompt makeovers, English errors with fixes and CEFR level, habits to swap, a rules file, a personal prompt template and a 7-day plan.
+5. Opens the report at http://127.0.0.1 in the browser.
+
+## Supported tools and where history is read
+- Claude Code: ~/.claude/projects/**/*.jsonl
+- OpenAI Codex CLI: ~/.codex/sessions/**/rollout-*.jsonl
+- Gemini CLI: ~/.gemini/tmp/*/logs.json and chats/
+- Cursor (Chat, Composer, Agent): Cursor state.vscdb (read from a temporary copy)
+- GitHub Copilot Chat (VS Code): workspaceStorage/*/chatSessions
+- Windsurf, Antigravity, Trae, Kiro, VSCodium: VS Code–family storage
+- Cline, Roo Code, Kilo Code: extension task histories
+- Continue: ~/.continue/sessions
+- OpenCode: ~/.local/share/opencode/storage
+- Aider: .aider.chat.history.md; SpecStory: .specstory/history/*.md
+- Any other tool: `npx howamiprompting --include export.md`
+
+## The six skills (scored 0–100)
+- Clarity: one unambiguous goal; no "fix it" or "make it better".
+- Context: current vs expected behaviour, relevant files, the why, errors with a theory.
+- Specificity: constraints, scope, acceptance criteria, examples.
+- Structure: one task at a time or numbered steps; key info first.
+- Efficiency: results without "still not working" loops and repeated corrections.
+- English: clear sentences, correct tense, punctuation; prose only, never code.
+
+## CLI options
+--agent <claude|codex|gemini|anthropic|openrouter|openai|ollama>, --model <name>, --sample <n>, --since <days>, --include <file>, --roots <dir>, --last, --fresh, --reset, --json <file>, --port <n>, --no-open, -y/--yes
+
+## FAQ
+### What is How Am I Prompting?
+How Am I Prompting? is a free, open-source command-line tool for developers. Run npx howamiprompting and it reads the prompts you have written to AI coding assistants such as Claude Code, Cursor, Codex, Gemini CLI and GitHub Copilot, scores how well you prompt, rewrites your weakest prompts and gives you a personal improvement plan. It's like Spotify Wrapped for your AI coding prompts.
+
+### How do I write better prompts for Claude Code, Cursor or Codex?
+State one clear goal, describe the current behaviour and the expected behaviour, point to the relevant files, add constraints (what not to touch) and say what done looks like. Give one task at a time or number the steps. When something fails, paste the new error with one line of your own theory instead of writing "still not working". Put rules you repeat every session into a CLAUDE.md or AGENTS.md file. How Am I Prompting? checks your real prompts against all of these.
+
+### Which AI coding tools are supported?
+Claude Code, OpenAI Codex CLI, Cursor (Chat, Composer and Agent), GitHub Copilot Chat in VS Code, Gemini CLI, Windsurf, Antigravity, Trae, Kiro, Cline, Roo Code, Kilo Code, Continue, OpenCode, Aider and SpecStory. Any other tool works by importing an export file with --include.
+
+### Is it safe? Does it upload my code or prompts?
+Your prompts are never sent to us. The tool reads your chat history locally, keeps only what you typed, removes pasted code and logs, and redacts API keys, tokens and passwords. For the deep analysis it sends a small sample of prompts through the AI agent you already use (your own Claude Code, Codex, Gemini or API key), or a local Ollama model that never leaves your machine. The code is open source on GitHub.
+
+### Is How Am I Prompting? free?
+Yes. It is free and MIT-licensed. There is no account, no sign-up and no paid plan. The analysis uses a few calls of your own AI quota, or none at all with a local Ollama model.
+
+### Do I need an API key?
+No. If you have Claude Code, Codex CLI or Gemini CLI installed and logged in, it uses that. It can also use an ANTHROPIC_API_KEY, OPENAI_API_KEY or OPENROUTER_API_KEY, or a local Ollama model. If you have none of them, the CLI helps you set one up — for example the free Gemini CLI with a Google account.
+
+### How is the prompting score calculated?
+Your prompts are scored from 0 to 100 on six skills: clarity, context, specificity, structure, efficiency and English. Your own AI agent reads a stratified sample of about 180 prompts in batches, and local metrics (prompt length, one-word replies, frustration loops, context-giving, repeated instructions, punctuation and grammar patterns) are computed on your machine. The overall score is a weighted average of the six skills.
+
+### What is a CLAUDE.md or AGENTS.md file and how does this help?
+CLAUDE.md (Claude Code), AGENTS.md (Codex and others), GEMINI.md, .cursor/rules and copilot-instructions.md are rules files your AI agent reads at the start of every session. How Am I Prompting? finds instructions you keep repeating, like "use pnpm" or "don't add comments", and generates a ready-to-paste rules file so you never type them again.
+
+### Does it check my English and grammar?
+Yes. English is one of the six skills. It shows your real grammar mistakes with corrections and the rule behind each one, estimates your CEFR level (A2 to C2) and only judges your prose, never your code. Practice mode has four timed mini-games built from your own weak spots.
+
+### Can I share my report?
+Yes. Download a share card image for X or LinkedIn, or share your full report as a link or a single HTML file. The report is packed inside the link itself, so nothing is uploaded to a server.
+
+### What do I need installed?
+Node.js 18.17 or newer. Reading Cursor history needs Node.js 22.5+ or the sqlite3 command, which comes with macOS. It works on macOS, Linux and Windows.
+
+### Where is my data stored?
+Only on your own computer, in ~/.howamiprompting/, so you can track your score over time. Clear it any time with <code>npx howamiprompting --reset</code>.
