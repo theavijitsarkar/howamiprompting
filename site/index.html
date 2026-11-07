@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How am I prompting? — Spotify Wrapped for your AI coding prompts</title>
+<meta name="description" content="One command scans your Claude Code, Codex, Cursor, Gemini CLI, Copilot and Cline chats locally, scores how you prompt (and your English), rewrites your worst prompts and coaches you to get better. Free, open source, no sign-up.">
+<meta property="og:title" content="How am I prompting? 🤔">
+<meta property="og:description" content="Spotify Wrapped for your AI coding prompts. npx howamiprompting — 100% local, free, open source.">
+<meta property="og:image" content="https://howamiprompting.com/img/share-card.png">
+<meta property="og:url" content="https://howamiprompting.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://howamiprompting.com/img/share-card.png">
+<meta name="author" content="Avijit Sarkar">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"How am I prompting?","applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Linux, Windows","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Spotify Wrapped for your AI coding prompts. Scores how you prompt Claude Code, Codex, Cursor and more — locally.","url":"https://howamiprompting.com","author":{"@type":"Person","name":"Avijit Sarkar","url":"https://avijitsarkar.com"}}</script>
+<link rel="canonical" href="https://howamiprompting.com/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤔</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!-- Google Analytics (website only — the CLI has no tracking) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C56GETBTNW"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-C56GETBTNW');</script>
+<style>
+:root { --ink:#16142b; --cream:#fff7e8; --yellow:#ffd84d; --pink:#ff5c8a; --blue:#4b5cff; --mint:#2ee6a6; --purple:#9b6bff; --orange:#ff9a3d; --muted:#6b6880; --line:3px solid var(--ink); --shadow:6px 6px 0 var(--ink); --font:'Bricolage Grotesque',system-ui,-apple-system,'Segoe UI',sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace; }
+* { box-sizing: border-box; } html { scroll-behavior: smooth; }
+body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--cream); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body::before { content:''; position: fixed; inset: 0; z-index: -2; background-image: radial-gradient(rgba(22,20,43,.11) 1.4px, transparent 1.4px); background-size: 22px 22px; }
+a { color: inherit; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; }
+nav { position: sticky; top: 0; z-index: 20; background: rgba(255,247,232,.9); backdrop-filter: blur(10px); border-bottom: 3px solid var(--ink); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 14px; padding-bottom: 14px; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; text-decoration: none; }
+.logo .q { width: 32px; height: 32px; border-radius: 50%; background: var(--yellow); border: var(--line); display: grid; place-items: center; box-shadow: 2px 2px 0 var(--ink); }
+.logo em { font-style: normal; color: var(--pink); }
+.links { display: flex; gap: 22px; font-weight: 700; } .links a { text-decoration: none; } .links a:hover { color: var(--pink); }
+@media (max-width: 760px) { .links { display: none; } }
+.btn { font-family: inherit; font-weight: 800; font-size: 17px; border: var(--line); border-radius: 15px; padding: 12px 22px; cursor: pointer; background: var(--yellow); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s; display: inline-flex; align-items: center; gap: 9px; text-decoration: none; }
+.btn:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+.btn.ghost { background: #fff; } .btn.pink { background: var(--pink); color: #fff; } .btn.small { font-size: 14px; padding: 8px 14px; }
+h1 { font-size: clamp(48px, 8vw, 96px); line-height: .95; letter-spacing: -.045em; margin: 18px 0 18px; }
+h2 { font-size: clamp(34px, 5vw, 56px); letter-spacing: -.035em; line-height: 1; margin: 0 0 14px; }
+h3 { font-size: 22px; letter-spacing: -.02em; margin: 0 0 8px; }
+p { line-height: 1.55; }
+.hl { background: linear-gradient(transparent 55%, var(--yellow) 55%); padding: 0 6px; }
+.hl.pink { background: linear-gradient(transparent 55%, var(--pink) 55%); }
+.tag { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: var(--ink); color: var(--yellow); padding: 6px 11px; border-radius: 8px; }
+.hero { padding: 70px 0 40px; text-align: center; }
+.hero .sub { font-size: clamp(18px, 2.2vw, 22px); max-width: 720px; margin: 0 auto 30px; color: #3b3854; }
+.term { display: inline-flex; align-items: center; gap: 16px; background: var(--ink); color: #fff; border: var(--line); border-radius: 18px; padding: 16px 16px 16px 24px; box-shadow: var(--shadow); font-family: var(--mono); font-size: clamp(18px, 2.6vw, 26px); }
+.term .d { color: var(--mint); } .term button { font-family: var(--font); }
+.trust { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+.pill { border: 2px solid var(--ink); border-radius: 99px; padding: 6px 14px; font-weight: 700; background: #fff; font-size: 14px; }
+.shots { position: relative; margin: 56px auto 0; max-width: 1000px; height: clamp(260px, 44vw, 520px); }
+.shots img { position: absolute; border: var(--line); border-radius: 18px; box-shadow: var(--shadow); width: 52%; transition: transform .4s; }
+.shots img:hover { transform: scale(1.03) rotate(0) !important; z-index: 5; }
+.shots .a { left: 0; top: 30px; transform: rotate(-4deg); } .shots .b { right: 0; top: 0; transform: rotate(3deg); } .shots .c { left: 24%; top: 34%; width: 52%; transform: rotate(-1deg); z-index: 2; }
+section { padding: 80px 0; }
+.tools { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 22px; }
+.tools span { border: 2px solid var(--ink); border-radius: 12px; padding: 9px 14px; font-weight: 800; background: #fff; box-shadow: 3px 3px 0 var(--ink); }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 26px; align-items: center; }
+@media (max-width: 860px) { .grid3, .grid2 { grid-template-columns: 1fr; } .shots { height: auto; } .shots img { position: static; width: 100%; transform: none !important; margin-bottom: 16px; } }
+.card { background: #fff; border: var(--line); border-radius: 22px; box-shadow: var(--shadow); padding: 26px; }
+.feat .e { font-size: 40px; } .feat p { margin: 0; color: #3b3854; }
+.feat:nth-child(1) { background: var(--yellow); } .feat:nth-child(3) { background: #e3fff4; } .feat:nth-child(5) { background: #ffd2dc; }
+.shot { width: 100%; border: var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+.steps { counter-reset: s; display: grid; gap: 16px; }
+.steps .card { display: flex; gap: 18px; align-items: flex-start; }
+.steps .card::before { counter-increment: s; content: counter(s); flex: 0 0 48px; height: 48px; border-radius: 50%; background: var(--pink); color: #fff; border: var(--line); display: grid; place-items: center; font-weight: 800; font-size: 22px; }
+.dark { background: var(--ink); color: #fff; border-top: 3px solid var(--ink); }
+.dark p { color: #d7d4ea; } .dark .card { background: #23203d; color: #fff; border-color: #fff; box-shadow: 6px 6px 0 var(--yellow); }
+table { width: 100%; border-collapse: collapse; } td, th { padding: 11px 10px; border-bottom: 2px solid #16142b14; text-align: left; } th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.sc { display: inline-block; min-width: 46px; text-align: center; border: 2px solid var(--ink); border-radius: 99px; padding: 2px 8px; font-weight: 800; }
+details { border: var(--line); border-radius: 16px; background: #fff; padding: 16px 20px; margin-bottom: 12px; box-shadow: 4px 4px 0 var(--ink); }
+summary { cursor: pointer; font-weight: 800; font-size: 18px; } details p { margin: 10px 0 0; color: #3b3854; }
+code { font-family: var(--mono); background: #16142b10; padding: 2px 7px; border-radius: 6px; font-size: .92em; }
+footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(--muted); }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(200%); background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 14px; font-weight: 700; border: 3px solid var(--yellow); transition: transform .3s; z-index: 50; }
+.toast.on { transform: translateX(-50%); }
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="logo" href="#"><span class="q">?</span>how am i prompting<em>?</em></a>
+  <div class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#privacy">Privacy</a><a href="#leaderboard">Leaderboard</a><a href="#faq">FAQ</a></div>
+  <a class="btn small" href="https://github.com/theavijitsarkar/howamiprompting" data-ev="github_click">⭐ Star on GitHub</a>
+</div></nav>
+
+<header class="hero wrap">
+  <span class="tag">Spotify Wrapped for your AI coding prompts</span>
+  <h1>How am I <span class="hl">prompting</span><span style="color:var(--pink)">?</span></h1>
+  <p class="sub">One command reads every Claude Code, Codex, Cursor, Gemini, Copilot & Cline chat on your machine, scores <b>how you prompt</b> — and your English — then rewrites your worst prompts and coaches you to get better.</p>
+  <div class="term"><span><span class="d">$</span> npx howamiprompting</span><button class="btn small" id="copyCmd">Copy</button></div>
+  <div class="trust"><span class="pill">🔒 100% local</span><span class="pill">🙅 No sign-up</span><span class="pill">🧠 Uses the AI you already have</span><span class="pill">💸 Free & open source</span></div>
+  <div class="shots"><img class="a" src="img/wrapped-persona.png" alt="Your prompting personality"><img class="b" src="img/wrapped-score.png" alt="Your prompting score"><img class="c" src="img/report.png" alt="Full report"></div>
+</header>
+
+<section style="padding-top:40px"><div class="wrap" style="text-align:center">
+  <h3>Reads your history from</h3>
+  <div class="tools"><span>Claude Code</span><span>Codex CLI</span><span>Cursor</span><span>Gemini CLI</span><span>GitHub Copilot</span><span>Windsurf</span><span>Antigravity</span><span>Cline</span><span>Roo Code</span><span>Kilo Code</span><span>Continue</span><span>OpenCode</span><span>Aider</span><span>SpecStory</span><span>+ any export</span></div>
+</div></section>
+
+<section id="features"><div class="wrap">
+  <h2>Everything you never knew<br>about <span class="hl pink">how you prompt</span></h2>
+  <p style="font-size:19px;max-width:700px;color:#3b3854">Not a lint check. Your own AI reads a sample of your real prompts and writes you a coaching report.</p>
+  <div class="grid3" style="margin-top:30px">
+    <div class="card feat"><div class="e">🎬</div><h3>Your Wrapped</h3><p>Prompts written, your AI crew, prime-time hour, catchphrases, rage moments — and your prompting personality.</p></div>
+    <div class="card feat"><div class="e">📐</div><h3>A score on 6 skills</h3><p>Clarity, context, specificity, structure, efficiency and English — with what's dragging each one down.</p></div>
+    <div class="card feat"><div class="e">✨</div><h3>Prompt makeovers</h3><p>Your worst real prompts, rewritten the way a senior engineer would write them. Copy, paste, learn.</p></div>
+    <div class="card feat"><div class="e">✍️</div><h3>Honest English feedback</h3><p>Your actual grammar mistakes, corrected, with a CEFR estimate. Judged on your prose — never your code.</p></div>
+    <div class="card feat"><div class="e">📌</div><h3>Stop repeating yourself</h3><p>Finds the instructions you type every session and turns them into a CLAUDE.md, AGENTS.md or Cursor rules file.</p></div>
+    <div class="card feat"><div class="e">🎮</div><h3>Practice mode</h3><p>Four timed mini-games built from your weak spots. No paste, no spell-check. Re-run monthly to watch your score climb.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:60px">
+    <img class="shot" src="img/makeovers.png" alt="Prompt makeovers" loading="lazy">
+    <div><span class="tag">Makeovers</span><h2 style="margin-top:14px">"fix the login its not working" → a prompt that works first time</h2><p style="font-size:18px">Most wasted agent turns come from prompts that make the AI guess. See exactly which of yours do — and how to rewrite them.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:60px">
+    <div><span class="tag">English</span><h2 style="margin-top:14px">Grammar slips become ambiguous instructions</h2><p style="font-size:18px">"why because the token is expire" costs you a turn. Get your real mistakes, the fix and the rule — then practise.</p></div>
+    <img class="shot" src="img/english.png" alt="English feedback" loading="lazy">
+  </div>
+</div></section>
+
+<section id="how" class="dark"><div class="wrap">
+  <h2 style="color:var(--yellow)">How it works</h2>
+  <div class="steps" style="margin-top:26px">
+    <div class="card"><div><h3>Scan, locally</h3><p>Read-only scan of your AI tools' history folders. Only what <b>you</b> typed is kept — replies, tool output and pasted code/logs are dropped. Keys, tokens and passwords are redacted.</p></div></div>
+    <div class="card"><div><h3>Measure</h3><p>Dozens of stats are computed on your machine: length, timing, one-word "ok"s, frustration, context-giving, repeated instructions, punctuation, grammar patterns.</p></div></div>
+    <div class="card"><div><h3>Coach, with your own AI</h3><p>A sample of ~180 prompts goes to the agent you already use — Claude Code, Codex, Gemini CLI, your API key or local Ollama — and your report opens in the browser.</p></div></div>
+  </div>
+</div></section>
+
+<section id="privacy"><div class="wrap grid2">
+  <div><span class="tag">Privacy</span><h2 style="margin-top:14px">Your prompts never touch our servers.</h2><p style="font-size:18px">There is no account and no telemetry in the CLI. The deep analysis runs through <b>your own</b> AI login or key. Want zero network? Run <code>npx howamiprompting --no-ai</code> or use Ollama.</p><p style="font-size:18px">It's all <a href="https://github.com/theavijitsarkar/howamiprompting">open source</a> — read every line.</p></div>
+  <img class="shot" src="img/share-card.png" alt="Share card" loading="lazy">
+</div></section>
+
+<section id="leaderboard" style="padding-top:20px"><div class="wrap">
+  <h2>🏆 Leaderboard</h2>
+  <p style="font-size:18px;color:#3b3854">Opt-in from the Share tab of your report. Only a nickname and scores are published.</p>
+  <div class="card" style="overflow-x:auto"><table id="lb"><tr><th>#</th><th>Dev</th><th>Score</th><th>Persona</th><th>Prompts</th><th>Tools</th></tr><tr><td colspan="6" style="color:var(--muted)">Loading…</td></tr></table></div>
+</div></section>
+
+<section id="faq" style="padding-top:20px"><div class="wrap" style="max-width:820px">
+  <h2>FAQ</h2>
+  <details><summary>Does it cost anything?</summary><p>No. It's free and MIT-licensed. The analysis uses a little of your own Claude Code / Codex / Gemini quota (a few calls), or nothing at all with <code>--no-ai</code> or Ollama.</p></details>
+  <details><summary>What do I need installed?</summary><p>Node.js 18.17+. For the deep analysis: Claude Code, Codex CLI, Gemini CLI, an Anthropic/OpenAI/OpenRouter API key, or Ollama. Cursor history needs Node 22.5+ or the <code>sqlite3</code> command (built into macOS).</p></details>
+  <details><summary>Is it only about English?</summary><p>No — English is one of six skills. The others are clarity, context, specificity, structure and efficiency: the things that decide whether your agent gets it right first time.</p></details>
+  <details><summary>My tool isn't supported</summary><p>Run <code>npx howamiprompting --include my-export.md</code> with any Markdown/JSON/text export, and open an issue so we add a collector.</p></details>
+  <details><summary>Where is my data stored?</summary><p>Only on your machine, in <code>~/.howamiprompting/</code> (your past scores, so you can track progress). Delete the folder any time.</p></details>
+</div></section>
+
+<section class="dark" style="text-align:center"><div class="wrap">
+  <h2 style="color:#fff">Ready to find out?</h2>
+  <div class="term" style="margin:16px 0 26px;border-color:#fff"><span><span class="d">$</span> npx howamiprompting</span><button class="btn small" id="copyCmd2">Copy</button></div><br>
+  <a class="btn pink" href="https://github.com/theavijitsarkar/howamiprompting" data-ev="github_click">⭐ Star on GitHub</a>
+</div></section>
+
+<section id="maker" style="padding:70px 0"><div class="wrap" style="max-width:820px">
+  <div class="card" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+    <div style="flex:0 0 84px;height:84px;border-radius:50%;background:var(--yellow);border:var(--line);display:grid;place-items:center;font-size:40px;box-shadow:4px 4px 0 var(--ink)">👋</div>
+    <div style="flex:1;min-width:240px"><span class="tag">Made by</span>
+      <h3 style="margin-top:10px;font-size:26px">Avijit Sarkar</h3>
+      <p style="margin:0;color:#3b3854">Founder from Kolkata, building SaaS products like <a href="https://godial.cc" target="_blank" rel="noopener">GoDial</a> and <a href="https://hyperscreenshot.com" target="_blank" rel="noopener">HyperScreenshot</a>. I talk to Claude Code and Codex all day and wanted to know if I was any good at it — so I built the tool I wished existed.</p>
+      <p style="margin:12px 0 0"><a class="btn small ghost" href="https://avijitsarkar.com" target="_blank" rel="noopener" data-ev="maker_click">avijitsarkar.com →</a></p></div>
+  </div>
+</div></section>
+
+<footer>Made with ❤️ in Kolkata by <a href="https://avijitsarkar.com">Avijit Sarkar</a> · <a href="https://github.com/theavijitsarkar/howamiprompting">GitHub</a> · <a href="https://www.npmjs.com/package/howamiprompting">npm</a> · MIT licensed</footer>
+<div class="toast" id="toast"></div>
+<script>
+  const toast = m => { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 2200); };
+  ['copyCmd', 'copyCmd2'].forEach(id => document.getElementById(id).onclick = async () => {
+    try { await navigator.clipboard.writeText('npx howamiprompting'); } catch (e) {}
+    toast('Copied! Paste it in your terminal 🚀'); gtag('event', 'copy_command', { location: id });
+  });
+  document.querySelectorAll('[data-ev]').forEach(a => a.addEventListener('click', () => gtag('event', a.dataset.ev, { link_url: a.href })));
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  fetch('api/leaderboard.php').then(r => r.json()).then(j => {
+    const t = document.getElementById('lb');
+    if (!j.top || !j.top.length) { t.rows[1].cells[0].textContent = 'Be the first! Run npx howamiprompting and publish from the Share tab.'; return; }
+    t.innerHTML = '<tr><th>#</th><th>Dev</th><th>Score</th><th>Persona</th><th>Prompts</th><th>Tools</th></tr>' + j.top.slice(0, 25).map((r, i) => `<tr><td><b>${i + 1}</b></td><td><b>${esc(r.handle)}</b>${r.github ? ` <a href="https://github.com/${esc(r.github)}" rel="nofollow noopener" target="_blank">@${esc(r.github)}</a>` : ''}</td><td><span class="sc" style="background:${r.overall >= 75 ? 'var(--mint)' : r.overall >= 55 ? 'var(--yellow)' : '#ffd2dc'}">${r.overall}</span>${r.ai ? '' : ' <small title="local stats only">*</small>'}</td><td>${esc(r.persona)}</td><td>${Number(r.prompts).toLocaleString()}</td><td style="color:var(--muted)">${esc(r.tools)}</td></tr>`).join('');
+  }).catch(() => { document.getElementById('lb').rows[1].cells[0].textContent = 'Leaderboard is warming up.'; });
+</script>
+</body>
+</html>

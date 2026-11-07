@@ -1,0 +1,13 @@
+node_modules/
+.DS_Store
+*.log
+# secrets & legacy web app (never commit)
+_legacy-webapp/
+**/secrets.php
+hap-secrets.php
+site/private/
+
+# local upload copy & junk
+hostinger-upload/
+_to_delete/
+*.zip

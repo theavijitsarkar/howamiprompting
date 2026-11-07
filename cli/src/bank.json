@@ -1,0 +1,687 @@
+{
+    "passages": [
+        {
+            "text": "Users reported that when paying via UPI during peak hours, the transaction times out on the gateway side. However, our server does not receive the payment webhook before the checkout session expires. As a result, the customer's account is debited, but the order status remains 'Pending' instead of 'Completed'. The support team has received over forty complaints since Monday.",
+            "questions": [
+                "What happened to the customer's money?",
+                "Why did our system fail to update the order status?"
+            ],
+            "key_facts": [
+                {
+                    "fact": "Money was debited \/ deducted from the customer",
+                    "keywords": [
+                        "debit",
+                        "deduct",
+                        "charged",
+                        "taken",
+                        "cut",
+                        "money was",
+                        "paid"
+                    ]
+                },
+                {
+                    "fact": "The webhook did not arrive before the session expired",
+                    "keywords": [
+                        "webhook",
+                        "notification",
+                        "callback",
+                        "confirmation"
+                    ]
+                },
+                {
+                    "fact": "Session expired \/ timed out",
+                    "keywords": [
+                        "expire",
+                        "time out",
+                        "timed out",
+                        "timeout",
+                        "session"
+                    ]
+                },
+                {
+                    "fact": "Order stayed Pending instead of Completed",
+                    "keywords": [
+                        "pending",
+                        "not completed",
+                        "not updated",
+                        "did not update"
+                    ]
+                }
+            ]
+        },
+        {
+            "text": "Last night, the nightly backup job started at 2 AM but failed halfway because the disk on the storage server was full. The job did not send an alert, so nobody noticed the failure until a customer asked for a data restore this morning. We were only able to restore data from three days ago. The team now plans to add disk monitoring and failure alerts.",
+            "questions": [
+                "Why did the backup fail?",
+                "Why was the customer affected?"
+            ],
+            "key_facts": [
+                {
+                    "fact": "Disk was full",
+                    "keywords": [
+                        "disk",
+                        "full",
+                        "space",
+                        "storage"
+                    ]
+                },
+                {
+                    "fact": "No alert was sent",
+                    "keywords": [
+                        "alert",
+                        "notif",
+                        "nobody noticed",
+                        "no one noticed",
+                        "not notice"
+                    ]
+                },
+                {
+                    "fact": "Restore only from three days ago \/ older data",
+                    "keywords": [
+                        "three days",
+                        "3 days",
+                        "old data",
+                        "older"
+                    ]
+                }
+            ]
+        },
+        {
+            "text": "After yesterday's app update, some Android users cannot log in with their phone number. The OTP is generated correctly, but the SMS provider rejects messages that contain our new sender ID because it has not been approved yet. Because the OTP never reaches the user, the login screen keeps waiting until it shows a timeout error. iOS users are not affected because they use email login.",
+            "questions": [
+                "Which users are affected and what do they see?",
+                "What is the real reason the login fails?"
+            ],
+            "key_facts": [
+                {
+                    "fact": "Android users cannot log in",
+                    "keywords": [
+                        "android"
+                    ]
+                },
+                {
+                    "fact": "SMS provider rejects messages",
+                    "keywords": [
+                        "reject",
+                        "block",
+                        "sms provider",
+                        "provider"
+                    ]
+                },
+                {
+                    "fact": "New sender ID not approved",
+                    "keywords": [
+                        "sender id",
+                        "sender",
+                        "approv"
+                    ]
+                },
+                {
+                    "fact": "OTP never reaches the user",
+                    "keywords": [
+                        "otp",
+                        "never reach",
+                        "not receive",
+                        "not reach",
+                        "doesn't receive",
+                        "does not receive"
+                    ]
+                }
+            ]
+        },
+        {
+            "text": "Our sales team noticed that call recordings from the auto-dialer are missing for calls longer than thirty minutes. The recording service uploads files in one request, and the cloud storage rejects any file larger than 100 MB. Since the upload error is not logged, the dashboard simply shows 'No recording available'. Short calls are recorded and uploaded without any problem.",
+            "questions": [
+                "Which recordings are missing?",
+                "Why are they missing, and why did nobody see an error?"
+            ],
+            "key_facts": [
+                {
+                    "fact": "Calls longer than thirty minutes",
+                    "keywords": [
+                        "thirty",
+                        "30",
+                        "long call",
+                        "longer"
+                    ]
+                },
+                {
+                    "fact": "Storage rejects files over 100 MB",
+                    "keywords": [
+                        "100",
+                        "large",
+                        "size",
+                        "big",
+                        "reject"
+                    ]
+                },
+                {
+                    "fact": "Single-request upload",
+                    "keywords": [
+                        "one request",
+                        "single request",
+                        "upload"
+                    ]
+                },
+                {
+                    "fact": "The error is not logged",
+                    "keywords": [
+                        "not logged",
+                        "no log",
+                        "log",
+                        "silent"
+                    ]
+                }
+            ]
+        },
+        {
+            "text": "On Friday, the CRM started showing duplicate leads for many customers. The import script runs every hour, but a recent change removed the check that compares phone numbers before inserting a new record. Because of this, every hourly run adds the same leads again. Sales agents are now calling the same customers two or three times, and some customers have complained.",
+            "questions": [
+                "What problem are the sales agents facing?",
+                "What change caused it?"
+            ],
+            "key_facts": [
+                {
+                    "fact": "Duplicate leads",
+                    "keywords": [
+                        "duplicate",
+                        "same lead",
+                        "repeated",
+                        "twice",
+                        "multiple times"
+                    ]
+                },
+                {
+                    "fact": "Phone number check was removed",
+                    "keywords": [
+                        "check",
+                        "phone number",
+                        "validation",
+                        "removed"
+                    ]
+                },
+                {
+                    "fact": "Hourly import adds them again",
+                    "keywords": [
+                        "hour",
+                        "every run",
+                        "import",
+                        "script"
+                    ]
+                },
+                {
+                    "fact": "Customers called multiple times \/ complained",
+                    "keywords": [
+                        "call",
+                        "complain"
+                    ]
+                }
+            ]
+        },
+        {
+            "text": "The mobile app crashes when a user opens the invoice screen while offline. The screen tries to read the cached invoice list, but the cache is empty for users who installed the app recently. The code does not handle an empty list, so it throws an exception and the app closes. Users who have opened invoices at least once while online do not see this crash.",
+            "questions": [
+                "When does the crash happen and for whom?",
+                "What is the technical cause?"
+            ],
+            "key_facts": [
+                {
+                    "fact": "Invoice screen while offline",
+                    "keywords": [
+                        "offline",
+                        "no internet",
+                        "without internet"
+                    ]
+                },
+                {
+                    "fact": "New users \/ empty cache",
+                    "keywords": [
+                        "new user",
+                        "recently",
+                        "empty",
+                        "cache"
+                    ]
+                },
+                {
+                    "fact": "Code does not handle empty list → exception",
+                    "keywords": [
+                        "handle",
+                        "exception",
+                        "null",
+                        "empty list"
+                    ]
+                }
+            ]
+        },
+        {
+            "text": "Customers on the yearly plan were charged again this month even though their subscription is valid until next year. A developer changed the billing cron job to run on the first day of every month, but forgot to skip customers on annual plans. Finance has already refunded twenty customers manually. The fix is ready, but it needs approval before it can be deployed.",
+            "questions": [
+                "What went wrong for the yearly customers?",
+                "What is the status of the fix?"
+            ],
+            "key_facts": [
+                {
+                    "fact": "Yearly customers were charged again",
+                    "keywords": [
+                        "charged",
+                        "billed",
+                        "double",
+                        "again"
+                    ]
+                },
+                {
+                    "fact": "Cron job changed \/ annual plans not skipped",
+                    "keywords": [
+                        "cron",
+                        "skip",
+                        "annual",
+                        "yearly",
+                        "monthly"
+                    ]
+                },
+                {
+                    "fact": "Refunds given manually",
+                    "keywords": [
+                        "refund"
+                    ]
+                },
+                {
+                    "fact": "Fix waiting for approval",
+                    "keywords": [
+                        "approv",
+                        "waiting",
+                        "not deployed",
+                        "ready"
+                    ]
+                }
+            ]
+        }
+    ],
+    "fixit": [
+        {
+            "broken": "When the user click not doing properly button because api slow it get stuck.",
+            "reference": "When the user clicks the button, the screen gets stuck because the API is slow.",
+            "focus": "subject-verb agreement"
+        },
+        {
+            "broken": "Payment deduction happened but page showing blank because response coming null.",
+            "reference": "The payment was deducted, but the page is blank because the API response is null.",
+            "focus": "missing auxiliary verbs"
+        },
+        {
+            "broken": "We cannot release today build why because testing team did not complete login check.",
+            "reference": "We cannot release today's build because the testing team has not finished testing the login flow.",
+            "focus": "\"why because\" & possessives"
+        },
+        {
+            "broken": "yesterday i deploy the code but it not reflecting in production server",
+            "reference": "Yesterday I deployed the code, but the changes are not showing on the production server.",
+            "focus": "past tense & capitalization"
+        },
+        {
+            "broken": "Kindly do the needful and revert back the API document asap.",
+            "reference": "Please send me the API documentation as soon as possible.",
+            "focus": "outdated phrases"
+        },
+        {
+            "broken": "The data is not coming in dashboard since morning, please check it is urgent.",
+            "reference": "The data has not appeared on the dashboard since this morning. Please check it urgently.",
+            "focus": "tense & run-on"
+        },
+        {
+            "broken": "I have did the changes in login page and pushed it can you review",
+            "reference": "I have made the changes to the login page and pushed them. Can you review them?",
+            "focus": "perfect tense & sentence boundaries"
+        },
+        {
+            "broken": "Server is crashing again and again whenever more users is coming at same time.",
+            "reference": "The server crashes whenever many users connect at the same time.",
+            "focus": "subject-verb agreement & articles"
+        },
+        {
+            "broken": "He told that the bug is fixed but still same issue is coming for me.",
+            "reference": "He said that the bug was fixed, but I still see the same issue.",
+            "focus": "reported speech & word order"
+        },
+        {
+            "broken": "Can able to share the logs so that I can able to debug.",
+            "reference": "Can you share the logs so that I can debug the issue?",
+            "focus": "\"can able to\""
+        },
+        {
+            "broken": "The OTP not received to user because of SMS gateway is down from 2 hours.",
+            "reference": "The user did not receive the OTP because the SMS gateway has been down for two hours.",
+            "focus": "passive voice & since\/for"
+        },
+        {
+            "broken": "Lets discuss about the new feature tomorrow morning in meeting.",
+            "reference": "Let's discuss the new feature in tomorrow morning's meeting.",
+            "focus": "\"discuss about\" & apostrophes"
+        },
+        {
+            "broken": "Build is failing, i checked the logs, there is some dependency issue, need to update it.",
+            "reference": "The build is failing. I checked the logs and found a dependency issue that needs to be updated.",
+            "focus": "comma splices"
+        },
+        {
+            "broken": "Customer is saying that they didnt got the invoice mail.",
+            "reference": "The customer says that they did not get the invoice email.",
+            "focus": "did + base verb"
+        },
+        {
+            "broken": "Whole day I am working on this bug only but still not solved.",
+            "reference": "I have been working on this bug all day, but it is still not solved.",
+            "focus": "present perfect continuous"
+        },
+        {
+            "broken": "If user enter wrong password more than 3 times then account will locked.",
+            "reference": "If a user enters the wrong password more than three times, the account will be locked.",
+            "focus": "conditionals & passive"
+        },
+        {
+            "broken": "The file upload is not happening for large files it shows error.",
+            "reference": "Large files fail to upload, and the app shows an error.",
+            "focus": "run-on sentence"
+        },
+        {
+            "broken": "Me and Rahul has completed the testing of all module.",
+            "reference": "Rahul and I have completed testing all the modules.",
+            "focus": "pronouns & plurals"
+        }
+    ],
+    "diagrams": [
+        {
+            "title": "Login security rule",
+            "boxes": [
+                {
+                    "icon": "🔑",
+                    "label": "User enters invalid password"
+                },
+                {
+                    "icon": "❌",
+                    "label": "3 failed attempts"
+                },
+                {
+                    "icon": "🔒",
+                    "label": "Account locked for 15 min"
+                }
+            ],
+            "audience": "an end user",
+            "key_points": [
+                {
+                    "point": "wrong\/invalid password",
+                    "keywords": [
+                        "wrong",
+                        "invalid",
+                        "incorrect"
+                    ]
+                },
+                {
+                    "point": "three attempts",
+                    "keywords": [
+                        "three",
+                        "3"
+                    ]
+                },
+                {
+                    "point": "locked 15 minutes",
+                    "keywords": [
+                        "lock",
+                        "15",
+                        "fifteen"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Free trial expiry",
+            "boxes": [
+                {
+                    "icon": "🎁",
+                    "label": "14-day free trial starts"
+                },
+                {
+                    "icon": "📧",
+                    "label": "Reminder email on day 12"
+                },
+                {
+                    "icon": "⛔",
+                    "label": "Access paused if not upgraded"
+                }
+            ],
+            "audience": "a new customer",
+            "key_points": [
+                {
+                    "point": "14-day trial",
+                    "keywords": [
+                        "14",
+                        "fourteen",
+                        "trial"
+                    ]
+                },
+                {
+                    "point": "reminder on day 12",
+                    "keywords": [
+                        "12",
+                        "twelve",
+                        "remind",
+                        "email"
+                    ]
+                },
+                {
+                    "point": "access paused unless upgraded",
+                    "keywords": [
+                        "pause",
+                        "stop",
+                        "block",
+                        "upgrade"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Password reset",
+            "boxes": [
+                {
+                    "icon": "📨",
+                    "label": "Tap \"Forgot password\""
+                },
+                {
+                    "icon": "🔗",
+                    "label": "Reset link sent (valid 30 min)"
+                },
+                {
+                    "icon": "✅",
+                    "label": "Set new password & log in"
+                }
+            ],
+            "audience": "an app user",
+            "key_points": [
+                {
+                    "point": "forgot password",
+                    "keywords": [
+                        "forgot",
+                        "forget"
+                    ]
+                },
+                {
+                    "point": "link valid 30 minutes",
+                    "keywords": [
+                        "30",
+                        "thirty",
+                        "link"
+                    ]
+                },
+                {
+                    "point": "new password",
+                    "keywords": [
+                        "new password",
+                        "set",
+                        "create"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Refund process",
+            "boxes": [
+                {
+                    "icon": "🧾",
+                    "label": "Customer requests refund"
+                },
+                {
+                    "icon": "🔍",
+                    "label": "Team reviews within 48 hrs"
+                },
+                {
+                    "icon": "💸",
+                    "label": "Money back in 5–7 days"
+                }
+            ],
+            "audience": "a customer",
+            "key_points": [
+                {
+                    "point": "request a refund",
+                    "keywords": [
+                        "request",
+                        "ask"
+                    ]
+                },
+                {
+                    "point": "review within 48 hours",
+                    "keywords": [
+                        "48",
+                        "two days",
+                        "review"
+                    ]
+                },
+                {
+                    "point": "5–7 days",
+                    "keywords": [
+                        "5",
+                        "7",
+                        "five",
+                        "seven",
+                        "days"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Missed call follow-up",
+            "boxes": [
+                {
+                    "icon": "📞",
+                    "label": "Lead does not answer"
+                },
+                {
+                    "icon": "⏱️",
+                    "label": "Auto-retry after 2 hours"
+                },
+                {
+                    "icon": "📋",
+                    "label": "After 3 tries → task for agent"
+                }
+            ],
+            "audience": "a sales agent",
+            "key_points": [
+                {
+                    "point": "lead does not answer",
+                    "keywords": [
+                        "answer",
+                        "pick",
+                        "miss"
+                    ]
+                },
+                {
+                    "point": "retry after two hours",
+                    "keywords": [
+                        "2",
+                        "two",
+                        "retry",
+                        "again"
+                    ]
+                },
+                {
+                    "point": "task after three tries",
+                    "keywords": [
+                        "task",
+                        "three",
+                        "3",
+                        "assign"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Offline sync",
+            "boxes": [
+                {
+                    "icon": "📴",
+                    "label": "App goes offline"
+                },
+                {
+                    "icon": "💾",
+                    "label": "Changes saved on phone"
+                },
+                {
+                    "icon": "🔄",
+                    "label": "Auto-sync when back online"
+                }
+            ],
+            "audience": "a field user",
+            "key_points": [
+                {
+                    "point": "offline",
+                    "keywords": [
+                        "offline",
+                        "no internet",
+                        "without internet"
+                    ]
+                },
+                {
+                    "point": "saved on the phone",
+                    "keywords": [
+                        "save",
+                        "store",
+                        "phone",
+                        "device"
+                    ]
+                },
+                {
+                    "point": "sync when online",
+                    "keywords": [
+                        "sync",
+                        "online",
+                        "upload",
+                        "connect"
+                    ]
+                }
+            ]
+        }
+    ],
+    "rewrites": [
+        "add one filter in leads page for status and date also make export working its not working from last week check fast",
+        "login api giving 500 sometimes not always, check logs and fix, also why token expiring early in android",
+        "make the dashboard ui like the other one we did but better and fast, use same colors, charts not coming properly fix that also",
+        "webhook not hitting our server when payment success, debug it and make order status update properly pls",
+        "refactor the call module code its very messy, also the recordings upload part failing for big files check it"
+    ],
+    "topics": [
+        "UPI payments",
+        "OTP login",
+        "call recordings",
+        "CRM lead import",
+        "push notifications",
+        "subscription billing",
+        "file uploads",
+        "API rate limiting",
+        "database migration",
+        "cache invalidation",
+        "WhatsApp integration",
+        "mobile app release",
+        "report export",
+        "auto-dialer campaigns",
+        "role permissions"
+    ]
+}

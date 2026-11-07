@@ -1,0 +1,48 @@
+{
+  "name": "howamiprompting",
+  "version": "0.1.0",
+  "description": "Spotify Wrapped for your AI coding prompts. Scans your Claude Code, Codex, Cursor, Gemini CLI, Copilot, Cline, Aider\u2026 chats locally, scores how you prompt (and your English), and shows you how to get better.",
+  "keywords": [
+    "prompt",
+    "prompting",
+    "claude-code",
+    "codex",
+    "cursor",
+    "gemini-cli",
+    "copilot",
+    "ai",
+    "llm",
+    "developer-tools",
+    "wrapped",
+    "cli"
+  ],
+  "homepage": "https://howamiprompting.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theavijitsarkar/howamiprompting.git"
+  },
+  "bugs": "https://github.com/theavijitsarkar/howamiprompting/issues",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "howamiprompting": "bin/howamiprompting.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "ui",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "start": "node bin/howamiprompting.js",
+    "fixtures": "node test/make-fixtures.js /tmp/hap-fakehome"
+  },
+  "author": {
+    "name": "Avijit Sarkar",
+    "url": "https://avijitsarkar.com"
+  }
+}
