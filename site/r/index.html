@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>How am I prompting? — your report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤔</text></svg>">
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<canvas id="confetti"></canvas>
+
+<nav class="nav">
+  <div class="logo"><div class="q">?</div><span>how am i prompting<em>?</em></span></div>
+  <div class="tabs" id="tabs">
+    <button data-view="report" class="on">📊 Report</button>
+    <button data-view="english">✍️ English</button>
+    <button data-view="practice">🎮 Practice</button>
+    <button data-view="prompts">🔎 My prompts</button>
+    <button data-view="share">🚀 Share</button>
+    <button id="replay">▶ Replay Wrapped</button>
+  </div>
+  <a class="star" href="https://github.com/theavijitsarkar/howamiprompting" target="_blank" rel="noopener">⭐ Star on GitHub</a>
+</nav>
+
+<main>
+  <section class="view on" id="v-report"></section>
+  <section class="view" id="v-english"></section>
+  <section class="view" id="v-practice"></section>
+  <section class="view" id="v-prompts">
+    <div class="card">
+      <div class="row between"><h2 style="margin:0">🔎 Every prompt you wrote</h2><span class="pill" id="pCount"></span></div>
+      <p class="muted">Search your history. Only you can see this — it never leaves your machine.</p>
+      <div class="row" style="gap:10px">
+        <input type="text" id="pq" placeholder="Search… e.g. still not working" style="flex:1;min-width:220px">
+        <select id="ptool" class="btn ghost small"></select>
+        <select id="pflag" class="btn ghost small"><option value="">All</option><option value="short">≤ 4 words</option><option value="long">80+ words</option><option value="paste">With pasted code/logs</option></select>
+      </div>
+      <div class="plist" id="plist"></div>
+      <div style="text-align:center;margin-top:16px"><button class="btn ghost small" id="pmore" hidden>Load more</button></div>
+    </div>
+  </section>
+  <section class="view" id="v-share"></section>
+  <div class="foot">Made with ❤️ by <a href="https://avijitsarkar.com" target="_blank" rel="noopener">Avijit Sarkar</a> for developers who talk to AI all day · <a href="https://howamiprompting.com" target="_blank" rel="noopener">howamiprompting.com</a> · <span id="ver"></span></div>
+</main>
+
+<div class="story" id="story"></div>
+<div class="overlay" id="busy"><div><div class="dots"><i></i><i></i><i></i><i></i></div><div style="font-size:22px;font-weight:800" id="busyMsg">Thinking…</div><div class="muted" style="color:#cfcbe6;margin-top:8px" id="busySub"></div></div></div>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

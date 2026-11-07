@@ -1,7 +1,1 @@
 Options -Indexes
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteRule ^private/ - [F,L]
-  RewriteRule ^api/_db\.php$ - [F,L]
-  RewriteRule ^c/([a-f0-9]{12})/?$ c.php?id=$1 [L,QSA]
-</IfModule>

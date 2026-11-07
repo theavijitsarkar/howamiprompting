@@ -9,7 +9,6 @@ import { history } from './store.js';
 
 const UI = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'ui');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json', '.ico': 'image/x-icon' };
-const LEADERBOARD = process.env.HOWAMIPROMPTING_API || 'https://howamiprompting.com/api';
 
 export function startServer({ bundle, prompts, agent, model, port = 0 }) {
   const token = crypto.randomBytes(16).toString('hex');
@@ -53,28 +52,6 @@ export function startServer({ bundle, prompts, agent, model, port = 0 }) {
           const t = tests.get(b.id);
           if (!t) return send(res, 404, { error: 'test expired — start a new one' });
           return send(res, 200, await gradeTest({ agent, model, test: t, answers: b.answers || {} }));
-        }
-        if (url.pathname === '/api/card' && req.method === 'POST') {
-          // Upload ONLY the rendered share-card PNG (scores, no prompts) to get a public link with a preview image.
-          const b = await body(req);
-          const png = String(b.png || '');
-          if (!png.startsWith('data:image/png;base64,') || png.length > 2.5e6) return send(res, 400, { error: 'Bad image' });
-          const payload = { png, overall: bundle.scores.overall, persona: bundle.stats.persona.name, emoji: bundle.stats.persona.emoji, version: bundle.version };
-          const r = await fetch(LEADERBOARD + '/card.php', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(20000) });
-          const j = await r.json().catch(() => ({ error: 'Share service unavailable' }));
-          return send(res, r.ok ? 200 : 502, r.ok ? j : { error: j.error || 'Share service unavailable' });
-        }
-        if (url.pathname === '/api/publish' && req.method === 'POST') {
-          const b = await body(req);
-          const s = bundle.stats, sc = bundle.scores;
-          const payload = {
-            handle: String(b.handle || '').slice(0, 40), github: String(b.github || '').slice(0, 40), country: String(b.country || '').slice(0, 2),
-            overall: sc.overall, scores: sc, persona: s.persona.name, level: bundle.ai?.level || null, ai: !!bundle.ai,
-            prompts: s.totals.prompts, tools: s.tools.map(t => t.name), median_words: s.length.median, version: bundle.version,
-          };
-          const r = await fetch(LEADERBOARD + '/publish.php', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(15000) });
-          const j = await r.json().catch(() => ({ error: 'Leaderboard unavailable' }));
-          return send(res, r.ok ? 200 : 502, r.ok ? j : { error: j.error || 'Leaderboard unavailable' });
         }
         return send(res, 404, { error: 'not found' });
       }

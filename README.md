@@ -29,7 +29,7 @@ One command scans every AI coding chat on your machine, keeps **only what you ty
 - 🗓️ **A personal prompt template + 7-day plan**
 - 🎮 **Practice mode** — four timed mini-games generated from *your* weak spots (no paste, no spell-check)
 - 📈 **Progress over time** — run it again next month and see your score move
-- 🚀 **Share card** — a PNG with your score and persona (no prompts in it). Optional public leaderboard.
+- 🚀 **Share it** — a PNG score card for X / LinkedIn, or your **full report as a link or a single .html file** a teammate can open (the report is packed inside the link — nothing is uploaded)
 
 <img src="docs/report.png" alt="The report">
 
@@ -70,7 +70,7 @@ You'll be asked before anything is sent. Use `--no-ai` for a stats-only report w
 - Your prompts are **never** sent to us. With an agent, the sample goes through *your own* Claude Code / Codex / Gemini / API key / local Ollama.
 - The report runs on `127.0.0.1` with a random per-run token.
 - History lives in `~/.howamiprompting/` — delete it any time.
-- The leaderboard is opt-in and only receives a nickname, scores, persona, tool names and prompt count.
+- Sharing is serverless: share links carry the report inside the URL fragment (`#…`), which browsers never send to any server.
 
 ## Options
 

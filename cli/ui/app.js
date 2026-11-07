@@ -13,7 +13,9 @@
 
   let token = (location.hash.match(/t=([a-f0-9]+)/) || [])[1];
   try { if (token) sessionStorage.setItem('hap_t', token); else token = sessionStorage.getItem('hap_t'); } catch (e) {}
-  if (location.hash) history.replaceState(null, '', location.pathname);
+  const SHARED_HASH = location.hash.startsWith('#r=') ? location.hash.slice(3) : null;
+  let SHARED = !!(window.HAP_SHARED || SHARED_HASH);
+  if (location.hash && !SHARED_HASH) history.replaceState(null, '', location.pathname);
 
   async function api(path, body) {
     const r = await fetch('/api/' + path, { method: body ? 'POST' : 'GET', headers: { 'x-hap-token': token || '', 'content-type': 'application/json' }, body: body ? JSON.stringify(body) : undefined });
@@ -30,7 +32,7 @@
   };
   const countUp = (el, to, ms = 1400) => { const t0 = performance.now(); const f = n => { const p = Math.min(1, (n - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString(); if (p < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); };
   const animateBars = root => setTimeout(() => $$('.fill[data-w]', root).forEach(f => f.style.width = f.dataset.w + '%'), 120);
-  const copy = async (text, msg = 'Copied 📋') => { try { await navigator.clipboard.writeText(text); toast(msg); } catch (e) { prompt('Copy this:', text); } };
+  const copy = async (text, msg = 'Copied 📋') => { try { await navigator.clipboard.writeText(text); toast(msg, 3500); } catch (e) { prompt('Copy this:', text); } };
 
   function confetti() {
     const c = $('#confetti'), x = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight;
@@ -183,9 +185,9 @@
       ${hist.length > 1 ? `<div class="card" style="margin-top:22px"><h3>📈 Your progress</h3><div class="hbars" style="height:140px">${hist.slice(-20).map(x => `<i style="height:${x.overall}%;background:${x.overall >= 75 ? '#2ee6a6' : x.overall >= 55 ? '#ffd84d' : '#ff5c8a'}" title="${new Date(x.date).toLocaleDateString()}: ${x.overall}"></i>`).join('')}</div><p class="muted" style="margin-bottom:0">${hist.length} runs · first ${hist[0].overall} → now ${sc.overall}</p></div>` : ''}
 
       <div class="card no-print" style="margin-top:34px;text-align:center;background:var(--ink);color:#fff">
-        <h2 style="color:var(--yellow)">Found this useful?</h2>
-        <p style="font-size:18px;margin:0 0 18px">Share your score card — and a ⭐ on GitHub helps other devs find this.</p>
-        <div class="row" style="justify-content:center"><button class="btn pink" onclick="document.querySelector('[data-view=share]').click()">🚀 Make my share card</button><a class="btn" href="${GH}" target="_blank" rel="noopener">⭐ Star on GitHub</a></div>
+        <h2 style="color:var(--yellow)">${SHARED ? 'How do YOU prompt?' : 'Found this useful?'}</h2>
+        <p style="font-size:18px;margin:0 0 18px">${SHARED ? 'Get your own report in 2 minutes — free, open source, nothing leaves your machine.' : 'Share your score card or your full report — and a ⭐ on GitHub helps other devs find this.'}</p>
+        <div class="row" style="justify-content:center">${SHARED ? `<button class="btn pink" data-copy="npx howamiprompting">📋 Copy: npx howamiprompting</button>` : `<button class="btn pink" onclick="document.querySelector('[data-view=share]').click()">🚀 Share my report</button>`}<a class="btn" href="${GH}" target="_blank" rel="noopener">⭐ Star on GitHub</a></div>
       </div>`;
 
     // rules file tabs
@@ -350,70 +352,100 @@
   /* ================= SHARE ================= */
   function renderShare() {
     const s = R.stats;
-    const text = `My AI prompting score: ${R.scores.overall}/100 ${s.persona.emoji} ${s.persona.name}\n${num(s.totals.prompts)} prompts · ${s.tools.map(t => t.name).slice(0, 3).join(', ')}\n\nHow do you prompt? npx howamiprompting`;
+    const text = `My AI prompting score: ${R.scores.overall}/100 ${s.persona.emoji} ${s.persona.name}\n${num(s.totals.prompts)} prompts · ${s.tools.map(t => t.name).slice(0, 3).join(', ')}\n\nHow do you prompt? npx howamiprompting\nhttps://howamiprompting.com`;
     $('#v-share').innerHTML = `
       <div class="card"><span class="tag">Share card</span><h2 style="margin-top:12px">Flex your prompting ${s.persona.emoji}</h2>
         <p class="muted">Only scores and counts — none of your prompts are in the image.</p>
         <canvas class="cardprev" id="cardc" width="1200" height="630"></canvas>
-        <div class="row" style="margin-top:18px"><button class="btn pink" id="shX">𝕏 Share on X</button><button class="btn blue" id="shLi">in Share on LinkedIn</button><button class="btn mint" id="shNative">📤 Share image…</button><button class="btn ghost" id="dl">⬇️ Download PNG</button><button class="btn ghost" id="cp">📋 Copy text</button></div>
-        <p class="muted" style="font-size:14px;margin-bottom:0" id="shNote">X & LinkedIn: we upload just this image to howamiprompting.com so your post shows it as a big preview. Nothing else is sent.</p>
+        <div class="row" style="margin-top:18px"><button class="btn pink" id="shX">𝕏 Post on X</button><button class="btn blue" id="shLi">in Post on LinkedIn</button><button class="btn mint" id="shNative">📤 Share image…</button><button class="btn ghost" id="dl">⬇️ Download PNG</button><button class="btn ghost" id="cp">📋 Copy text</button></div>
+        <p class="muted" style="font-size:14px;margin-bottom:0">X / LinkedIn: we copy the image to your clipboard and open the post box — just paste (⌘V / Ctrl+V).</p>
       </div>
-      <div class="grid2" style="margin-top:24px">
-        <div class="card"><h3>🏆 Join the public leaderboard <small class="muted">(optional)</small></h3>
-          <p class="muted" style="margin-top:0">Sends only your nickname, scores, persona, tool names and prompt count to howamiprompting.com. Never your prompts.</p>
-          <input type="text" id="lbHandle" placeholder="Nickname (shown publicly)" maxlength="40" style="margin-bottom:10px">
-          <input type="text" id="lbGh" placeholder="GitHub username (optional)" maxlength="40" style="margin-bottom:12px">
-          <button class="btn blue" id="lbGo">Publish my score</button><div id="lbMsg" style="margin-top:10px;font-weight:700"></div></div>
-        <div class="card" style="background:var(--ink);color:#fff"><h3 style="color:var(--yellow)">⭐ Help other devs find this</h3><p>howamiprompting is free and open source. A star on GitHub is the best way to say thanks.</p><a class="btn" href="${GH}" target="_blank" rel="noopener">⭐ Star on GitHub</a>
-          <p style="margin-top:18px;color:#cfcbe6">Tell a teammate: <code style="background:#fff2;padding:3px 8px;border-radius:6px">npx howamiprompting</code></p></div>
-      </div>`;
+      <div class="card" style="margin-top:24px"><span class="tag">Full report</span><h2 style="margin-top:12px">Share your detailed report 🔗</h2>
+        <p class="muted" style="margin-top:0">Let a teammate, your manager or a friend open this exact report — scores, coaching, makeovers and English feedback. Nothing is uploaded: the whole report is packed <b>inside the link</b> (or the file).</p>
+        <div class="row" style="gap:10px;margin-bottom:12px"><input type="text" id="shName" placeholder="Your name on the report (optional)" maxlength="40" style="max-width:340px"></div>
+        <div class="row"><button class="btn pink" id="shLink">🔗 Copy share link</button><button class="btn ghost" id="shFile">⬇️ Download report (.html)</button></div>
+        <p class="muted" style="font-size:14px;margin-bottom:0">⚠️ Includes the example quotes from your prompts shown in this report (secrets already redacted) — not your full prompt history.</p>
+      </div>
+      <div class="card" style="margin-top:24px;background:var(--ink);color:#fff"><h3 style="color:var(--yellow)">⭐ Help other devs find this</h3><p>howamiprompting is free and open source. A star on GitHub is the best way to say thanks.</p><div class="row"><a class="btn" href="${GH}" target="_blank" rel="noopener">⭐ Star on GitHub</a><span style="color:#cfcbe6">Tell a teammate: <code style="background:#fff2;padding:3px 8px;border-radius:6px">npx howamiprompting</code></span></div></div>`;
     const cardBlob = () => new Promise(r => $('#cardc').toBlob(r, 'image/png'));
-    let cardUrl = null;
-    const ensureCardUrl = async () => {
-      if (cardUrl) return cardUrl;
-      busy(true, ['Creating your share link…']);
-      try { const j = await api('card', { png: $('#cardc').toDataURL('image/png') }); cardUrl = j.url; return cardUrl; }
-      finally { busy(false); }
+    const copyImage = async () => { try { await navigator.clipboard.write([new ClipboardItem({ 'image/png': cardBlob() })]); return true; } catch (e) { return false; } };
+    $('#shX').onclick = async () => {
+      const ok = await copyImage();
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+      toast(ok ? 'Image copied — paste it into your post (⌘V) 🖼️' : 'Download the PNG and attach it to your post 🖼️', 5000);
     };
-    const shareTo = async (net) => {
-      const w = window.open('about:blank', '_blank'); // open now so pop-up blockers allow it
-      try {
-        const u = await ensureCardUrl();
-        const short = `My AI prompting score: ${R.scores.overall}/100 ${s.persona.emoji} ${s.persona.name}. How do you prompt? npx howamiprompting`;
-        const target = net === 'x' ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(short)}&url=${encodeURIComponent(u)}`
-          : `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(u)}`;
-        if (w) w.location = target; else window.open(target, '_blank');
-        if (net === 'li') copy(text + '\n' + u, 'Post text copied — paste it into LinkedIn ✍️');
-      } catch (e) {
-        if (w) w.close();
-        // offline fallback: put the PNG on the clipboard and open the composer with text only
-        let copied = false;
-        try { await navigator.clipboard.write([new ClipboardItem({ 'image/png': await cardBlob() })]); copied = true; } catch (err) {}
-        toast(copied ? 'Image copied — paste it into your post (⌘V) 🖼️' : '😵 ' + e.message, 5000);
-        window.open(net === 'x' ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}` : 'https://www.linkedin.com/feed/', '_blank');
-      }
+    $('#shLi').onclick = async () => {
+      const ok = await copyImage();
+      window.open(`https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`, '_blank');
+      toast(ok ? 'Image copied — paste it into your post (⌘V) 🖼️' : 'Download the PNG and attach it to your post 🖼️', 5000);
     };
-    $('#shX').onclick = () => shareTo('x');
-    $('#shLi').onclick = () => shareTo('li');
     $('#shNative').onclick = async () => {
       const file = new File([await cardBlob()], 'howamiprompting.png', { type: 'image/png' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try { await navigator.share({ files: [file], text, title: 'How am I prompting?' }); } catch (e) {}
-      } else {
-        try { await navigator.clipboard.write([new ClipboardItem({ 'image/png': file })]); toast('Image copied to clipboard — paste it anywhere 🖼️'); }
-        catch (e) { $('#dl').click(); }
-      }
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], text, title: 'How am I prompting?' }); } catch (e) {} }
+      else if (await copyImage()) toast('Image copied to clipboard — paste it anywhere 🖼️');
+      else $('#dl').click();
     };
     $('#dl').onclick = () => { const a = document.createElement('a'); a.download = 'howamiprompting.png'; a.href = $('#cardc').toDataURL('image/png'); a.click(); toast('Saved 🎉'); };
     $('#cp').onclick = () => copy(text);
-    $('#lbGo').onclick = async () => {
-      const handle = $('#lbHandle').value.trim();
-      if (!handle) { $('#lbMsg').textContent = 'Pick a nickname first.'; return; }
-      $('#lbGo').disabled = true; $('#lbMsg').textContent = 'Publishing…';
-      try { const r = await api('publish', { handle, github: $('#lbGh').value.trim() }); $('#lbMsg').innerHTML = `🎉 Published! ${r.rank ? `You're <b>#${r.rank}</b>. ` : ''}${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">See the leaderboard →</a>` : ''}`; confetti(); }
-      catch (e) { $('#lbMsg').textContent = '😵 ' + e.message; }
-      finally { $('#lbGo').disabled = false; }
+    $('#shLink').onclick = async () => {
+      try {
+        const url = 'https://howamiprompting.com/r/#r=' + await packReport(sharedBundle($('#shName').value.trim()));
+        await copy(url, url.length > 15000 ? 'Link copied (it\'s long — the .html file is easier to send) 🔗' : 'Share link copied 🔗 — anyone can open it');
+      } catch (e) { toast('😵 ' + e.message); }
     };
+    $('#shFile').onclick = async () => {
+      try {
+        const [html, css, js] = await Promise.all(['index.html', 'app.css', 'app.js'].map(f => fetch(f).then(r => r.text())));
+        const data = JSON.stringify(sharedBundle($('#shName').value.trim())).replace(/</g, '\\u003c');
+        const out = html
+          .replace(/<link rel="stylesheet" href="app\.css">/, () => `<style>${css}</style>`)
+          .replace(/<script src="app\.js"><\/script>/, () => `<script>window.HAP_SHARED=${data};</script><script>${js.replace(/<\/script/gi, '<\\/script')}</script>`);
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([out], { type: 'text/html' }));
+        a.download = `howamiprompting-report${$('#shName').value.trim() ? '-' + $('#shName').value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') : ''}.html`;
+        a.click(); toast('Report saved — send the file to anyone 📨');
+      } catch (e) { toast('😵 ' + e.message); }
+    };
+  }
+
+  /* ---- serverless report sharing: data lives in the link (#r=…) or in a standalone .html ---- */
+  function sharedBundle(name) {
+    const { history, ...rest } = R;
+    return { ...rest, shared: { name: name || null, at: new Date().toISOString() } };
+  }
+  const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+  async function packReport(obj) {
+    const stream = new Blob([JSON.stringify(obj)]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+    const buf = await new Response(stream).arrayBuffer();
+    let bin = ''; const u8 = new Uint8Array(buf);
+    for (let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode(...u8.subarray(i, i + 0x8000));
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  async function unpackReport(s) {
+    const stream = new Blob([unb64u(s)]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    return JSON.parse(await new Response(stream).text());
+  }
+
+  /* ---- one-time GitHub star ask ---- */
+  function askForStar(delay = 14000) {
+    try { if (localStorage.getItem('hap_star')) return; } catch (e) {}
+    setTimeout(() => {
+      if ($('#story').classList.contains('on') || $('#busy').classList.contains('on') || document.querySelector('.starmodal')) return askForStar(8000);
+      const m = document.createElement('div');
+      m.className = 'starmodal';
+      m.innerHTML = `<div class="starbox"><div style="font-size:64px;line-height:1;animation:wobble 2.5s ease-in-out infinite">⭐</div>
+        <h2 style="margin:14px 0 8px">Enjoying this?</h2>
+        <p style="font-size:17px;margin:0 0 20px">howamiprompting is free and open source, built by one developer. A GitHub star takes 2 seconds and helps other devs find it.</p>
+        <div class="row" style="justify-content:center"><a class="btn pink" id="starGo" href="${GH}" target="_blank" rel="noopener">⭐ Star on GitHub</a><button class="btn ghost" id="starDone">Already did 💛</button></div>
+        <button class="link" id="starLater" style="margin-top:14px;background:none;border:0;font:inherit;color:var(--muted);cursor:pointer;text-decoration:underline">Maybe later</button></div>`;
+      document.body.appendChild(m);
+      const close = (forever) => { m.remove(); try { if (forever) localStorage.setItem('hap_star', '1'); } catch (e) {} };
+      $('#starGo', m).onclick = () => { close(true); setTimeout(confetti, 300); };
+      $('#starDone', m).onclick = () => { close(true); toast('You rock 💛'); };
+      $('#starLater', m).onclick = () => close(false);
+      m.onclick = e => { if (e.target === m) close(false); };
+    }, delay);
   }
   function drawCard() {
     const c = $('#cardc'); if (!c) return;
@@ -451,14 +483,26 @@
   /* ================= BOOT ================= */
   (async () => {
     try {
-      R = await api('report');
+      if (window.HAP_SHARED) R = window.HAP_SHARED;
+      else if (SHARED_HASH) R = await unpackReport(SHARED_HASH);
+      else if (!token && location.hostname !== '127.0.0.1' && location.hostname !== 'localhost') throw new Error('No report in this link.');
+      else R = await api('report');
       $('#ver').textContent = 'v' + R.version + ' · ' + new Date(R.generatedAt).toLocaleString();
-      $('#ptool').innerHTML = '<option value="">All tools</option>' + R.stats.tools.map(t => `<option>${esc(t.name)}</option>`).join('');
-      renderReport(); renderEnglish(); practiceHome(); renderShare();
+      if (SHARED) {
+        ['practice', 'prompts', 'share'].forEach(v => $(`#tabs [data-view=${v}]`).hidden = true);
+        const who = R.shared?.name ? `${esc(R.shared.name)}'s` : 'a developer\'s';
+        document.title = `${R.shared?.name ? R.shared.name + "'s" : 'A'} prompting report · How am I prompting?`;
+        $('main').insertAdjacentHTML('afterbegin', `<div class="banner" style="background:var(--yellow)">👀 You're viewing <b>${who}</b> prompting report. How do <b>you</b> prompt? Run <code>npx howamiprompting</code> — free, 100% local. <a href="https://howamiprompting.com" target="_blank" rel="noopener">Learn more →</a></div>`);
+      } else {
+        $('#ptool').innerHTML = '<option value="">All tools</option>' + R.stats.tools.map(t => `<option>${esc(t.name)}</option>`).join('');
+      }
+      renderReport(); renderEnglish();
+      if (!SHARED) { practiceHome(); renderShare(); }
       let seen = null; try { seen = localStorage.getItem('hap_seen'); } catch (e) {}
-      if (seen !== R.generatedAt) playStory();
+      if (SHARED || seen !== R.generatedAt) playStory();
+      askForStar(SHARED ? 25000 : 14000);
     } catch (e) {
-      $('#v-report').innerHTML = `<div class="card" style="text-align:center"><h2>😵 Can't load your report</h2><p class="muted">${esc(e.message)}</p><p>Open the exact link printed in your terminal, or run <code>npx howamiprompting --last</code>.</p></div>`;
+      $('#v-report').innerHTML = `<div class="card" style="text-align:center"><h2>😵 Can't load this report</h2><p class="muted">${esc(e.message)}</p><p>Want your own? Run <code>npx howamiprompting</code> in your terminal.</p></div>`;
     }
   })();
 })();

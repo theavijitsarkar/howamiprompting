@@ -82,7 +82,7 @@ footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(
 <body>
 <nav><div class="wrap">
   <a class="logo" href="#"><span class="q">?</span>how am i prompting<em>?</em></a>
-  <div class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#privacy">Privacy</a><a href="#leaderboard">Leaderboard</a><a href="#faq">FAQ</a></div>
+  <div class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#privacy">Privacy</a><a href="#faq">FAQ</a></div>
   <a class="btn small" href="https://github.com/theavijitsarkar/howamiprompting" data-ev="github_click">⭐ Star on GitHub</a>
 </div></nav>
 
@@ -135,11 +135,7 @@ footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(
   <img class="shot" src="img/share-card.png" alt="Share card" loading="lazy">
 </div></section>
 
-<section id="leaderboard" style="padding-top:20px"><div class="wrap">
-  <h2>🏆 Leaderboard</h2>
-  <p style="font-size:18px;color:#3b3854">Opt-in from the Share tab of your report. Only a nickname and scores are published.</p>
-  <div class="card" style="overflow-x:auto"><table id="lb"><tr><th>#</th><th>Dev</th><th>Score</th><th>Persona</th><th>Prompts</th><th>Tools</th></tr><tr><td colspan="6" style="color:var(--muted)">Loading…</td></tr></table></div>
-</div></section>
+
 
 <section id="faq" style="padding-top:20px"><div class="wrap" style="max-width:820px">
   <h2>FAQ</h2>
@@ -147,6 +143,7 @@ footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(
   <details><summary>What do I need installed?</summary><p>Node.js 18.17+. For the deep analysis: Claude Code, Codex CLI, Gemini CLI, an Anthropic/OpenAI/OpenRouter API key, or Ollama. Cursor history needs Node 22.5+ or the <code>sqlite3</code> command (built into macOS).</p></details>
   <details><summary>Is it only about English?</summary><p>No — English is one of six skills. The others are clarity, context, specificity, structure and efficiency: the things that decide whether your agent gets it right first time.</p></details>
   <details><summary>My tool isn't supported</summary><p>Run <code>npx howamiprompting --include my-export.md</code> with any Markdown/JSON/text export, and open an issue so we add a collector.</p></details>
+  <details><summary>Can I share my report?</summary><p>Yes — download a share card PNG, or send your full report as a link or a single .html file. The report is packed inside the link itself, so nothing is uploaded anywhere.</p></details>
   <details><summary>Where is my data stored?</summary><p>Only on your machine, in <code>~/.howamiprompting/</code> (your past scores, so you can track progress). Delete the folder any time.</p></details>
 </div></section>
 
@@ -176,11 +173,6 @@ footer { padding: 50px 0 60px; text-align: center; font-weight: 600; color: var(
   });
   document.querySelectorAll('[data-ev]').forEach(a => a.addEventListener('click', () => gtag('event', a.dataset.ev, { link_url: a.href })));
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  fetch('api/leaderboard.php').then(r => r.json()).then(j => {
-    const t = document.getElementById('lb');
-    if (!j.top || !j.top.length) { t.rows[1].cells[0].textContent = 'Be the first! Run npx howamiprompting and publish from the Share tab.'; return; }
-    t.innerHTML = '<tr><th>#</th><th>Dev</th><th>Score</th><th>Persona</th><th>Prompts</th><th>Tools</th></tr>' + j.top.slice(0, 25).map((r, i) => `<tr><td><b>${i + 1}</b></td><td><b>${esc(r.handle)}</b>${r.github ? ` <a href="https://github.com/${esc(r.github)}" rel="nofollow noopener" target="_blank">@${esc(r.github)}</a>` : ''}</td><td><span class="sc" style="background:${r.overall >= 75 ? 'var(--mint)' : r.overall >= 55 ? 'var(--yellow)' : '#ffd2dc'}">${r.overall}</span>${r.ai ? '' : ' <small title="local stats only">*</small>'}</td><td>${esc(r.persona)}</td><td>${Number(r.prompts).toLocaleString()}</td><td style="color:var(--muted)">${esc(r.tools)}</td></tr>`).join('');
-  }).catch(() => { document.getElementById('lb').rows[1].cells[0].textContent = 'Leaderboard is warming up.'; });
 </script>
 </body>
 </html>
